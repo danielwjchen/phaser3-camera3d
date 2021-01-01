@@ -1,0 +1,1195 @@
+{
+    "anims": [
+        {
+            "key": "stand",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "stand_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "stand_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "stand_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "stand_03",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "walk",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "walk_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "walk_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "walk_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "walk_03",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "frozen",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "frozen_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "frozen_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "swing",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "swing_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_03",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_04",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_05",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_06",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "swing_07",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "right_punch",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "punch_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "punch_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "left_punch",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "punch_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "punch_03",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "left_kick",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "kick_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "kick_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "right_kick",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "kick_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "kick_03",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "burnt",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "burnt_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "burnt_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "full_swing",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "full_swing_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "full_swing_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "run",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "run_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "run_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "run_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "lifting",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "lifting_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "lifting_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "lifting_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "throwing",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "throwing_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "throwing_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "pitching",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "pitching_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "pitching_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "pitching_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "jump_punching",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "jump_punching_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "jump_punching_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "jump_punching_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "falling_backward",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "falling_backward_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_backward_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_backward_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_backward_03",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_backward_04",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "kicking_up",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "kicking_up_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "kicking_up_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "kicking_up_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "uppercut",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "uppercut_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "uppercut_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "haymaker",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "haymaker_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "haymaker_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "haymaker_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "jump_kicking",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "jump_kicking_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "jump_kicking_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "falling_forward",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "falling_forward_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_forward_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_forward_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_forward_03",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "falling_forward_04",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "pushing_up",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "pushing_up_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "pushing_up_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "landing",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "landing_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "landing_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "somersault",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "somersault_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "somersault_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "somersault_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "choked",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "choked_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "choked_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "choked_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "guard",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "guard_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "guard_attacked",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "guard_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "guard_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": 0,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "rolling",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "rolling_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "rolling_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "gut_punched",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "gut_punched_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "gut_punched_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "gut_punched_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "head_punched",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "head_punched_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "head_punched_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "running_while_lifting",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "running_while_lifting_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "running_while_lifting_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "running_while_lifting_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "running_while_lifting_stop",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "running_while_lifting_stop_00",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "jump",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "jump_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "jump_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "jump_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeatDelay": 0,
+            "repeat": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "forward_jump",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "forward_jump_00",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "forward_jump_land",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "forward_jump_land_00",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "front_flip",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "front_flip_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "front_flip_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "duck",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "duck_00",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "punched_from_behind",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "punched_from_behind_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "punched_from_behind_01",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "drinking",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "drinking_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "drinking_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "atlas",
+                    "frame": "drinking_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": true,
+            "showOnStart": false,
+            "hideOnComplete": false
+        }
+    ]
+}
