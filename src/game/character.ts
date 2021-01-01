@@ -103,17 +103,22 @@ export class Character extends Phaser.GameObjects.Sprite {
         ].includes(this.currentStatus);
     }
 
-    private changeDirection(command: Command): void {
+    private changeDirection(command: Command) {
         if (command.Left) {
             if (this.directionX === Direction.Right) {
-                this.scaleX *= -1;
+                // this.scaleX *= -1;
+                this.flipX = !this.flipX;
+                this.x += this.width;
             }
             this.directionX = Direction.Left;
 
         } else if (command.Right) {
             if (this.directionX === Direction.Left) {
-                this.scaleX *= -1;
+                // this.scaleX *= -1;
+                this.flipX = !this.flipX;
+                this.x -= this.width;
             }
+
             this.directionX = Direction.Right;
         }
     }
@@ -173,8 +178,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         let velocityX: number = 0;
         if (command.Right) {
             velocityX += velocity;
-        }
-        if (command.Left) {
+        } else if (command.Left) {
             velocityX -= velocity;
         }
         let velocityY: number = 0;
@@ -223,7 +227,6 @@ export class Character extends Phaser.GameObjects.Sprite {
         if (this.attackSequence.includes(this.currentStatus)) {
             return;
         }
-
     }
 
     public attack() {
