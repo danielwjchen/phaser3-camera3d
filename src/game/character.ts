@@ -27,9 +27,9 @@ export type Command = {[key in keyof typeof Direction]: boolean};
 
 export class Character extends Phaser.GameObjects.Sprite {
 
-    private currentStatus: string;
+    private currentStatus: string = '';
     private directionX: Direction.Right | Direction.Left;
-    private directionY: Direction.Up | Direction.Down;
+    private directionY: Direction.Up | Direction.Down | null = null;
     private physicsBody: Phaser.Physics.Arcade.Body;
     private attackSequence: string[] = [
         'right_punch',
@@ -37,11 +37,11 @@ export class Character extends Phaser.GameObjects.Sprite {
         'left_kick',
         'right_kick',
     ];
-    private nextAttackSequence: string;
+    private nextAttackSequence: string | null = null;
     private runningVelocity: number;
     private walkingVelocity: number;
     private jumpingVelocity: number;
-    private yBeforeJumping: number;
+    private yBeforeJumping: number | null = null;
 
     constructor(
         scene: Phaser.Scene, 
