@@ -47,12 +47,13 @@ export class Character extends Phaser.GameObjects.Sprite {
         scene: Phaser.Scene, 
         x: number, 
         y: number, 
-        key: string, 
+        texture: string | Phaser.Textures.Texture, 
+        frame?: string | number,
         runningVelocity: number=400, 
         walkingVelocity: number=100,
         jumpingVelocity: number=200 
     ) {
-        super(scene, x, y, key);
+        super(scene, x, y, texture, frame);
         this.directionX = Direction.Right;
         this.runningVelocity = runningVelocity;
         this.walkingVelocity = walkingVelocity;
