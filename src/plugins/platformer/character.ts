@@ -46,6 +46,7 @@ export class Character {
     private jumpingVelocity: number;
     private yBeforeJumping: number | null = null;
     private platform: Platform;
+    private isFlipped: boolean = false;
 
     public sprite: Phaser.GameObjects.Sprite;
 
@@ -116,19 +117,44 @@ export class Character {
 
     private changeDirection(command: Command) {
         if (command.Left) {
-            if (this.directionX === Direction.Right) {
+            if (
+                this.directionX === Direction.Right
+                || !this.isFlipped
+            ) {
                 this.sprite.flipX = !this.sprite.flipX;
-                // this.x += this.width;
             }
+            this.isFlipped = true;
             this.directionX = Direction.Left;
 
         } else if (command.Right) {
-            if (this.directionX === Direction.Left) {
+            if (
+                this.directionX === Direction.Left
+                || this.isFlipped
+            ) {
                 this.sprite.flipX = !this.sprite.flipX;
-                // this.x -= this.width;
             }
-
+            this.isFlipped = false;
             this.directionX = Direction.Right;
+        }
+        if (command.Down) {
+            if (
+                this.directionY === Direction.Up
+                || !this.isFlipped
+            ) {
+                this.sprite.flipX = !this.sprite.flipX;
+            }
+            this.isFlipped = true;
+            this.directionY = Direction.Down;
+
+        } else if (command.Up) {
+            if (
+                this.directionY === Direction.Down
+                || this.isFlipped
+            ) {
+                this.sprite.flipX = !this.sprite.flipX;
+            }
+            this.isFlipped = false;
+            this.directionY = Direction.Up;
         }
     }
 
