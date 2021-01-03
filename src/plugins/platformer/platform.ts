@@ -48,4 +48,9 @@ export class Platform {
         }
     }
 
+    public isOutOfBound(x: number, z: number, width: number, length: number): boolean {
+        let result: boolean = false;
+        return result;
+    }
+
 }

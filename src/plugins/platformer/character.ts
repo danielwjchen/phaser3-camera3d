@@ -28,7 +28,7 @@ export type Command = {[key in keyof typeof Direction]: boolean};
 
 export const GAME_OBJECT_TYPE_CHARACTER: string = 'character';
 
-export class Character extends Phaser.GameObjects.Sprite {
+export class Character {
 
     private currentStatus: string = '';
     private directionX: Direction.Right | Direction.Left;
@@ -47,6 +47,8 @@ export class Character extends Phaser.GameObjects.Sprite {
     private yBeforeJumping: number | null = null;
     private platform: Platform;
 
+    public sprite: Phaser.GameObjects.Sprite;
+
     constructor(
         platform: Platform,
         x: number, 
@@ -57,16 +59,16 @@ export class Character extends Phaser.GameObjects.Sprite {
         walkingVelocity: number=100,
         jumpingVelocity: number=200 
     ) {
-        super(platform.scene, x, y, texture, frame);
+        this.sprite = new Phaser.GameObjects.Sprite(platform.scene, x, y, texture, frame);
         this.platform = platform;
         this.directionX = Direction.Right;
         this.runningVelocity = runningVelocity;
         this.walkingVelocity = walkingVelocity;
         this.jumpingVelocity = jumpingVelocity;
         this.yBeforeJumping = null;
-        platform.scene.physics.world.enable(this);
-        platform.scene.add.existing(this);
-        this.physicsBody = this.body as Phaser.Physics.Arcade.Body;
+        platform.scene.physics.world.enable(this.sprite);
+        platform.scene.add.existing(this.sprite);
+        this.physicsBody = this.sprite.body as Phaser.Physics.Arcade.Body;
         this.physicsBody.setCollideWorldBounds(true);
         this.physicsBody.allowGravity = false;
         this.stand();
@@ -86,7 +88,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.yBeforeJumping = null;
         this.physicsBody.stop();
         this.currentStatus = 'stand';
-        this.anims.play(this.currentStatus);
+        this.sprite.anims.play(this.currentStatus);
     }
 
     private getVelocity(command: Command, isRunning: boolean): number {
@@ -115,14 +117,14 @@ export class Character extends Phaser.GameObjects.Sprite {
     private changeDirection(command: Command) {
         if (command.Left) {
             if (this.directionX === Direction.Right) {
-                this.flipX = !this.flipX;
+                this.sprite.flipX = !this.sprite.flipX;
                 // this.x += this.width;
             }
             this.directionX = Direction.Left;
 
         } else if (command.Right) {
             if (this.directionX === Direction.Left) {
-                this.flipX = !this.flipX;
+                this.sprite.flipX = !this.sprite.flipX;
                 // this.x -= this.width;
             }
 
@@ -131,17 +133,17 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     private onAttackAnimationComplete() {
-        if (this.attackSequence.includes(this.anims.getName())) {
+        if (this.attackSequence.includes(this.sprite.anims.getName())) {
             if (
                 this.nextAttackSequence === null ||
-                this.anims.getName() === this.nextAttackSequence
+                this.sprite.anims.getName() === this.nextAttackSequence
             ) {
                 this.nextAttackSequence = null;
                 this.stand();
             } else {
                 this.currentStatus = this.nextAttackSequence;
                 this.nextAttackSequence = null;
-                this.anims.play(this.currentStatus).once(
+                this.sprite.anims.play(this.currentStatus).once(
                     'animationcomplete',
                     this.onAttackAnimationComplete
                 );
@@ -180,7 +182,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         } else {
             this.currentStatus = 'walk';
         }
-        this.anims.play(this.currentStatus, true);
+        this.sprite.anims.play(this.currentStatus, true);
         let velocity = this.getVelocity(command, isRunning);
         let velocityX: number = 0;
         if (command.Right) {
@@ -211,8 +213,8 @@ export class Character extends Phaser.GameObjects.Sprite {
         }
         this.nextAttackSequence = null;
         this.currentStatus = 'jump';
-        this.anims.play(this.currentStatus).on('animationcomplete',  () => {
-            if (this.anims.getName() === 'jump') {
+        this.sprite.anims.play(this.currentStatus).on('animationcomplete',  () => {
+            if (this.sprite.anims.getName() === 'jump') {
                 this.yBeforeJumping = this.physicsBody.y;
                 this.physicsBody.setVelocityY(this.jumpingVelocity * -1);
                 this.physicsBody.setAccelerationY(this.jumpingVelocity);
@@ -252,7 +254,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         ) {
             attackSequence = this.attackSequence[currentAttackSequenceIndex + 1];
         }
-        if (!this.attackSequence.includes(this.anims.getName())) {
+        if (!this.attackSequence.includes(this.sprite.anims.getName())) {
             let velocity: number = this.walkingVelocity / 2;
             if (this.directionX === Direction.Left) {
                 velocity *= -1;
@@ -260,7 +262,7 @@ export class Character extends Phaser.GameObjects.Sprite {
             }
             this.physicsBody.setVelocityX(velocity);
             this.currentStatus = attackSequence;
-            this.anims.play(this.currentStatus).once(
+            this.sprite.anims.play(this.currentStatus).once(
                 'animationcomplete',  
                 this.onAttackAnimationComplete
             );
@@ -281,9 +283,9 @@ export class Character extends Phaser.GameObjects.Sprite {
             } else {
                 this.physicsBody.setVelocityX(this.walkingVelocity * -0.25);
             }
-            this.anims.play(this.currentStatus).once('animationcomplete', () => {
+            this.sprite.anims.play(this.currentStatus).once('animationcomplete', () => {
                 this.physicsBody.setVelocityX(0);
-                if (this.anims.getName() !== 'guard_attacked') {
+                if (this.sprite.anims.getName() !== 'guard_attacked') {
                     return;
                 }
                 this.guard();
@@ -304,11 +306,11 @@ export class Character extends Phaser.GameObjects.Sprite {
                     this.currentStatus = 'falling_forward'
                 }
             }
-            this.anims.play(this.currentStatus).once('animationcomplete', () => {
+            this.sprite.anims.play(this.currentStatus).once('animationcomplete', () => {
                 this.nextAttackSequence = null;
                 this.yBeforeJumping = null;
                 this.physicsBody.stop();
-                this.scene.time.addEvent({
+                this.sprite.scene.time.addEvent({
                     delay: knockOutDelay,
                     callback: () => {
                         this.stand()
@@ -316,7 +318,7 @@ export class Character extends Phaser.GameObjects.Sprite {
                         this.yBeforeJumping = null;
                         this.physicsBody.stop();
                         this.currentStatus = 'stand';
-                        this.anims.play(this.currentStatus);
+                        this.sprite.anims.play(this.currentStatus);
                     },
                 });
             });
@@ -331,7 +333,7 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.yBeforeJumping = null;
         this.physicsBody.stop();
         this.currentStatus = 'guard';
-        this.anims.play(this.currentStatus);
+        this.sprite.anims.play(this.currentStatus);
     }
 
 }
