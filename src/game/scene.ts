@@ -124,7 +124,6 @@ export class MainScene extends Phaser.Scene {
 
     update() {
         if (!this.character) { return; }
-        this.character.update();
         this.cameras.main.centerOn(this.character.x, this.character.y);
     }
 }

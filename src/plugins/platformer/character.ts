@@ -70,6 +70,9 @@ export class Character extends Phaser.GameObjects.Sprite {
         this.physicsBody.setCollideWorldBounds(true);
         this.physicsBody.allowGravity = false;
         this.stand();
+        this.platform.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
+            this.update();
+        });
     }
 
     /**
@@ -218,7 +221,6 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     public update() {
-        this.setOrigin(0.5, 0.5);
         if (this.currentStatus === 'jump') {
             if (
                 this.yBeforeJumping !== null &&
