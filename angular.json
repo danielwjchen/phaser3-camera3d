@@ -127,5 +127,8 @@
       }
     }
   },
-  "defaultProject": "camera3d"
+  "defaultProject": "camera3d",
+  "cli": {
+    "analytics": false
+  }
 }

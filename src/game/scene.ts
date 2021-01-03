@@ -2,6 +2,8 @@ import * as  Phaser from 'phaser';
 
 import { Character, Command, Direction } from './character';
 
+const RADIAN_45: number = 0.7853982;
+
 export class MainScene extends Phaser.Scene {
 
     private spriteName: string = 'template';
@@ -40,27 +42,18 @@ export class MainScene extends Phaser.Scene {
     createLinesZ(
         gridSize: number, gridColor: number, start: number, end: number
     ) {
-        // let line = this.add.line(
-        //     0, end + gridSize, 
-        //     0, 0, 
-        //     gridSize, -gridSize, 
-        //     gridColor
-        // );
-        // let line2 = this.add.line(
-        //     0, end + gridSize * 2, 
-        //     0, 0, 
-        //     gridSize * 2, -gridSize * 2, 
-        //     gridColor
-        // );
-        // line.setOrigin(0, 0);
-        // line2.setOrigin(0, 0);
-        for (let i: number = end; i <= start; i = i + 1 * gridSize) {
+        let height: number = start - end;
+        let slope: number = height * 1.41;
+        let base: number = height;
+        console.log(slope ^ 2 - height ^ 2)
+        for (let i: number = 0; i < (this.game.canvas.width + base); i = i + gridSize) {
             let line = this.add.line(
-                0, end + i, 
+                i, this.game.canvas.height / 2, 
                 0, 0, 
-                i, -i, 
+                0, slope, 
                 gridColor
             );
+            line.setRotation(RADIAN_45);
             line.setOrigin(0, 0);
         }
     }
