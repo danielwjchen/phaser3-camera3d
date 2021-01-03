@@ -3,7 +3,6 @@ import {
     Character, PlatformerPlugin, Command, Direction 
 } from 'src/plugins/platformer';
 
-const RADIAN_45: number = 0.7853982;
 const CAMERA_ZOOM_STEP = 0.5;
 
 export class MainScene extends Phaser.Scene {
@@ -34,63 +33,18 @@ export class MainScene extends Phaser.Scene {
         });
 
     }
-
-
-    private createLinesX(
-        gridSize: number, gridColor: number, start: number, end: number
-    ) {
-        for (let i: number = start; i >= end; i = i - 1 * gridSize) {
-            this.add.line(
-                0 + this.game.canvas.width / 2, i, 
-                0, 0, 
-                this.game.canvas.width, 0, 
-                gridColor
-            );
-        }
-    }
-
-    private createLinesZ(
-        gridSize: number, gridColor: number, start: number, end: number
-    ) {
-        let height: number = start - end;
-        let slope: number = height * 1.41;
-        let base: number = height;
-        for (let i: number = 0; i < (this.game.canvas.width + base); i = i + gridSize) {
-            let line = this.add.line(
-                i, this.game.canvas.height / 2, 
-                0, 0, 
-                0, slope, 
-                gridColor
-            );
-            line.setRotation(RADIAN_45);
-            line.setOrigin(0, 0);
-        }
-    }
-
-    private createPlatform() {
+    
+    private createUiTop() {
         let uiTopColor: number = 0x9966ff;
-        let uiBottomColor: number = 0x9966ff;
-        let gridColor: number = 0x0B610B;
-        let yHorizon: number = this.game.canvas.height / 2;
         let yOffsetForUi: number = this.game.canvas.height / 5;
 
-        let yStage: number = this.game.canvas.height - yOffsetForUi;
-        let gridSize: number = (yHorizon - yOffsetForUi) / 5;
-        this.createLinesX(gridSize, gridColor, yStage, yHorizon);
-        this.createLinesZ(gridSize, gridColor, yStage, yHorizon);
-
-        let lineTop: Phaser.GameObjects.Line = this.add.line(
+        this.add.line(
             0 + this.game.canvas.width / 2, yOffsetForUi, 
             0, 0, 
             this.game.canvas.width, 0, 
             uiTopColor
         );
-        // let lineTop: Phaser.GameObjects.Line = this.add.line(
-        //     0 + this.game.canvas.width / 2, this.game.canvas.height - yOffsetForUi, 
-        //     0, yOffsetForUi, 
-        //     this.game.canvas.width, this.game.canvas.height - yOffsetForUi, 
-        //     0x2966ff
-        // );
+
     }
 
     preload(): void {
@@ -105,12 +59,13 @@ export class MainScene extends Phaser.Scene {
     }
 
     create(): void {
-        this.createPlatform();
+        this.createUiTop();
         this.addCameraMovements();
         if (!this.platformer) {
             return;
 
         }
+        this.platformer.createPlatform();
         let character: Character = this.platformer.createCharacter(
             this.cameras.main.centerX, 
             this.cameras.main.centerY, 
