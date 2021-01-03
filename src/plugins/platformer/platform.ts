@@ -43,8 +43,8 @@ export class Platform {
                 0, slope, 
                 gridColor
             );
-            line.setRotation(RADIAN_45);
             line.setOrigin(0, 0);
+            line.setRotation(RADIAN_45);
         }
     }
 

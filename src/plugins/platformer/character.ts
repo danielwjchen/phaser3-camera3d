@@ -1,5 +1,7 @@
 import * as  Phaser from 'phaser';
+import { from } from 'rxjs';
 import { Platform } from './platform';
+import { SQRT_2 } from './object3d';
 
 export enum Direction {
     Up,
@@ -219,16 +221,20 @@ export class Character {
         let velocityY: number = 0;
         if (command.Up) {
             this.directionY = Direction.Up;
-            velocityY -= velocity;
+            velocityX += velocity / SQRT_2;
+            velocityY -= velocity / SQRT_2;
         }
         if (command.Down) {
             this.directionY = Direction.Down;
-            velocityY += velocity;
+            velocityX -= velocity / SQRT_2;
+            velocityY += velocity / SQRT_2;
         }
         if (velocityX === 0 && velocityY === 0) {
             this.stand();
         } else {
-            this.physicsBody.setVelocity(velocityX, velocityY);
+            this.physicsBody.setVelocity(
+                velocityX, velocityY
+            );
         }
     }
 
