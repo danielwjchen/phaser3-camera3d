@@ -107,7 +107,6 @@ export class Character extends Phaser.GameObjects.Sprite {
     private changeDirection(command: Command) {
         if (command.Left) {
             if (this.directionX === Direction.Right) {
-                // this.scaleX *= -1;
                 this.flipX = !this.flipX;
                 this.x += this.width;
             }
@@ -115,7 +114,6 @@ export class Character extends Phaser.GameObjects.Sprite {
 
         } else if (command.Right) {
             if (this.directionX === Direction.Left) {
-                // this.scaleX *= -1;
                 this.flipX = !this.flipX;
                 this.x -= this.width;
             }
