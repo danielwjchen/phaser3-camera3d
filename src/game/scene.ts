@@ -53,7 +53,6 @@ export class MainScene extends Phaser.Scene {
         let height: number = start - end;
         let slope: number = height * 1.41;
         let base: number = height;
-        console.log(slope ^ 2 - height ^ 2)
         for (let i: number = 0; i < (this.game.canvas.width + base); i = i + gridSize) {
             let line = this.add.line(
                 i, this.game.canvas.height / 2, 
