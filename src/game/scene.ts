@@ -1,6 +1,7 @@
 import * as  Phaser from 'phaser';
-
-import { Character, Command, Direction } from './character';
+import { 
+    Character, PlatformerPlugin, Command, Direction 
+} from 'src/plugins/platformer';
 
 const RADIAN_45: number = 0.7853982;
 const CAMERA_ZOOM_STEP = 0.5;
@@ -9,6 +10,7 @@ export class MainScene extends Phaser.Scene {
 
     private spriteName: string = 'template';
     private character: Character | undefined;
+    private platformer: PlatformerPlugin | undefined;
 
     constructor() {
         super({
@@ -105,8 +107,11 @@ export class MainScene extends Phaser.Scene {
     create(): void {
         this.createPlatform();
         this.addCameraMovements();
-        let character: Character = new Character(
-            this, 
+        if (!this.platformer) {
+            return;
+
+        }
+        let character: Character = this.platformer.createCharacter(
             this.cameras.main.centerX, 
             this.cameras.main.centerY, 
             this.spriteName
