@@ -3,6 +3,7 @@ import * as  Phaser from 'phaser';
 import { Character, Command, Direction } from './character';
 
 const RADIAN_45: number = 0.7853982;
+const CAMERA_ZOOM_STEP = 0.5;
 
 export class MainScene extends Phaser.Scene {
 
@@ -14,19 +15,26 @@ export class MainScene extends Phaser.Scene {
             key: 'MainScene',
         })
     }
+    
 
-    preload(): void {
-        this.load.animation(
-            this.spriteName, 
-            'assets/characters/template/animation.json',
-        );
-        this.load.atlas(
-            'atlas', 
-            'assets/characters/template/atlas.png',
-            'assets/characters/template/atlas.json')
+    private addCameraMovements() {
+
+        this.input.on(Phaser.Input.Events.POINTER_WHEEL, (pointer: Phaser.Input.Pointer ) => {
+            let zoomTo : number = (
+                pointer.deltaY > 0 
+                ? this.cameras.main.zoom - CAMERA_ZOOM_STEP
+                : this.cameras.main.zoom + CAMERA_ZOOM_STEP
+            );
+            if (zoomTo <= 1) {
+                zoomTo = 1;
+            }
+            this.cameras.main.zoom = zoomTo;
+        });
+
     }
 
-    createLinesX(
+
+    private createLinesX(
         gridSize: number, gridColor: number, start: number, end: number
     ) {
         for (let i: number = start; i >= end; i = i - 1 * gridSize) {
@@ -39,7 +47,7 @@ export class MainScene extends Phaser.Scene {
         }
     }
 
-    createLinesZ(
+    private createLinesZ(
         gridSize: number, gridColor: number, start: number, end: number
     ) {
         let height: number = start - end;
@@ -58,7 +66,7 @@ export class MainScene extends Phaser.Scene {
         }
     }
 
-    createPlatform() {
+    private createPlatform() {
         let uiTopColor: number = 0x9966ff;
         let uiBottomColor: number = 0x9966ff;
         let gridColor: number = 0x0B610B;
@@ -84,8 +92,20 @@ export class MainScene extends Phaser.Scene {
         // );
     }
 
+    preload(): void {
+        this.load.animation(
+            this.spriteName, 
+            'assets/characters/template/animation.json',
+        );
+        this.load.atlas(
+            'atlas', 
+            'assets/characters/template/atlas.png',
+            'assets/characters/template/atlas.json')
+    }
+
     create(): void {
         this.createPlatform();
+        this.addCameraMovements();
         let character: Character = new Character(
             this, 
             this.cameras.main.centerX, 
