@@ -9,4 +9,8 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
     ) {
         super(scene, pluginManager);
     }
+
+    public createCharacter(x: number, y:number) {
+
+    }
 }
