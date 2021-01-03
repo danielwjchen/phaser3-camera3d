@@ -1,4 +1,5 @@
 import * as  Phaser from 'phaser';
+import { Platform } from './platform';
 
 export enum Direction {
     Up,
@@ -44,9 +45,10 @@ export class Character extends Phaser.GameObjects.Sprite {
     private walkingVelocity: number;
     private jumpingVelocity: number;
     private yBeforeJumping: number | null = null;
+    private platform: Platform;
 
     constructor(
-        scene: Phaser.Scene, 
+        platform: Platform,
         x: number, 
         y: number, 
         texture: string | Phaser.Textures.Texture, 
@@ -55,14 +57,15 @@ export class Character extends Phaser.GameObjects.Sprite {
         walkingVelocity: number=100,
         jumpingVelocity: number=200 
     ) {
-        super(scene, x, y, texture, frame);
+        super(platform.scene, x, y, texture, frame);
+        this.platform = platform;
         this.directionX = Direction.Right;
         this.runningVelocity = runningVelocity;
         this.walkingVelocity = walkingVelocity;
         this.jumpingVelocity = jumpingVelocity;
         this.yBeforeJumping = null;
-        scene.physics.world.enable(this);
-        scene.add.existing(this);
+        platform.scene.physics.world.enable(this);
+        platform.scene.add.existing(this);
         this.physicsBody = this.body as Phaser.Physics.Arcade.Body;
         this.physicsBody.setCollideWorldBounds(true);
         this.physicsBody.allowGravity = false;
