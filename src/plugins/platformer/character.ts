@@ -113,14 +113,14 @@ export class Character extends Phaser.GameObjects.Sprite {
         if (command.Left) {
             if (this.directionX === Direction.Right) {
                 this.flipX = !this.flipX;
-                this.x += this.width;
+                // this.x += this.width;
             }
             this.directionX = Direction.Left;
 
         } else if (command.Right) {
             if (this.directionX === Direction.Left) {
                 this.flipX = !this.flipX;
-                this.x -= this.width;
+                // this.x -= this.width;
             }
 
             this.directionX = Direction.Right;
@@ -218,6 +218,7 @@ export class Character extends Phaser.GameObjects.Sprite {
     }
 
     public update() {
+        this.setOrigin(0.5, 0.5);
         if (this.currentStatus === 'jump') {
             if (
                 this.yBeforeJumping !== null &&

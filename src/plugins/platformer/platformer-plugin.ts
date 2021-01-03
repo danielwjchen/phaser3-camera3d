@@ -32,6 +32,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
             this.platform, x, y, texture, frame, 
             runningVelocity, walkingVelocity, jumpingVelocity
         );
+        characater.setOrigin(0.5, 0.5);
         this.scene.sys.displayList.add(characater);
         return characater;
     }
