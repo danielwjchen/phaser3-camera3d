@@ -25,6 +25,8 @@ let blinkFrequency: number = 10;
 
 export type Command = {[key in keyof typeof Direction]: boolean};
 
+export const GAME_OBJECT_TYPE_CHARACTER: string = 'character';
+
 export class Character extends Phaser.GameObjects.Sprite {
 
     private currentStatus: string = '';
