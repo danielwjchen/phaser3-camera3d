@@ -5,7 +5,6 @@ export class Object3D {
     private _z: number = 0;
 
     set z(value: number) {
-        this.setZ(value);
         this._z = value;
         this.sprite.depth = value * -1;
     }
