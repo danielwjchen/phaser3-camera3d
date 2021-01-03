@@ -24,7 +24,75 @@ export class MainScene extends Phaser.Scene {
             'assets/characters/template/atlas.json')
     }
 
+    createLinesX(
+        gridSize: number, gridColor: number, start: number, end: number
+    ) {
+        for (let i: number = start; i >= end; i = i - 1 * gridSize) {
+            this.add.line(
+                0 + this.game.canvas.width / 2, i, 
+                0, 0, 
+                this.game.canvas.width, 0, 
+                gridColor
+            );
+        }
+    }
+
+    createLinesZ(
+        gridSize: number, gridColor: number, start: number, end: number
+    ) {
+        // let line = this.add.line(
+        //     0, end + gridSize, 
+        //     0, 0, 
+        //     gridSize, -gridSize, 
+        //     gridColor
+        // );
+        // let line2 = this.add.line(
+        //     0, end + gridSize * 2, 
+        //     0, 0, 
+        //     gridSize * 2, -gridSize * 2, 
+        //     gridColor
+        // );
+        // line.setOrigin(0, 0);
+        // line2.setOrigin(0, 0);
+        for (let i: number = end; i <= start; i = i + 1 * gridSize) {
+            let line = this.add.line(
+                0, end + i, 
+                0, 0, 
+                i, -i, 
+                gridColor
+            );
+            line.setOrigin(0, 0);
+        }
+    }
+
+    createPlatform() {
+        let uiTopColor: number = 0x9966ff;
+        let uiBottomColor: number = 0x9966ff;
+        let gridColor: number = 0x0B610B;
+        let yHorizon: number = this.game.canvas.height / 2;
+        let yOffsetForUi: number = this.game.canvas.height / 5;
+
+        let yStage: number = this.game.canvas.height - yOffsetForUi;
+        let gridSize: number = (yHorizon - yOffsetForUi) / 5;
+        this.createLinesX(gridSize, gridColor, yStage, yHorizon);
+        this.createLinesZ(gridSize, gridColor, yStage, yHorizon);
+
+        let lineTop: Phaser.GameObjects.Line = this.add.line(
+            0 + this.game.canvas.width / 2, yOffsetForUi, 
+            0, 0, 
+            this.game.canvas.width, 0, 
+            uiTopColor
+        );
+        // let lineTop: Phaser.GameObjects.Line = this.add.line(
+        //     0 + this.game.canvas.width / 2, this.game.canvas.height - yOffsetForUi, 
+        //     0, yOffsetForUi, 
+        //     this.game.canvas.width, this.game.canvas.height - yOffsetForUi, 
+        //     0x2966ff
+        // );
+    }
+
     create(): void {
+        this.createPlatform();
         let character: Character = new Character(
             this, 
             this.cameras.main.centerX, 
