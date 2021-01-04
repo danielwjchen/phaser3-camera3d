@@ -34,7 +34,7 @@ export class Character {
 
     private currentStatus: string = '';
     private directionX: Direction.Right | Direction.Left;
-    private directionY: Direction.Up | Direction.Down | null = null;
+    private directionZ: Direction.Up | Direction.Down | null = null;
     private physicsBody: Phaser.Physics.Arcade.Body;
     private attackSequence: string[] = [
         'right_punch',
@@ -139,9 +139,9 @@ export class Character {
             this.directionX = Direction.Left;
         }
         if (command.Up) {
-            this.directionY = Direction.Up;
+            this.directionZ = Direction.Up;
         } else if (command.Down) {
-            this.directionY = Direction.Down;
+            this.directionZ = Direction.Down;
         }
     }
 
@@ -201,12 +201,12 @@ export class Character {
         }
         let velocityY: number = 0;
         if (command.Up) {
-            this.directionY = Direction.Up;
+            this.directionZ = Direction.Up;
             velocityX += velocity / SQRT_2;
             velocityY -= velocity / SQRT_2;
         }
         if (command.Down) {
-            this.directionY = Direction.Down;
+            this.directionZ = Direction.Down;
             velocityX -= velocity / SQRT_2;
             velocityY += velocity / SQRT_2;
         }
