@@ -18,7 +18,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
     }
 
     public createCharacter(
-        x: number, y:number,
+        x: number, y:number, z:number,
         texture: string | Phaser.Textures.Texture, 
         frame?: string | number,
         runningVelocity: number=400, 
@@ -29,7 +29,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
             throw new Error('Platform is not created');
         }
         let characater: Character = new Character(
-            this.platform, x, y, texture, frame, 
+            this.platform, x, y, z, texture, frame, 
             runningVelocity, walkingVelocity, jumpingVelocity
         );
         this.scene.sys.displayList.add(characater.sprite);

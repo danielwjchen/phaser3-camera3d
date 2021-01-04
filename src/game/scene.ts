@@ -69,6 +69,7 @@ export class MainScene extends Phaser.Scene {
         let character: Character = this.platformer.createCharacter(
             this.cameras.main.centerX, 
             this.cameras.main.centerY, 
+            0,
             this.spriteName
         );
         let leftKey: Phaser.Input.Keyboard.Key = 

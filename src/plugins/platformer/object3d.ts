@@ -5,7 +5,7 @@ export type Projection = {
     y: number,
 };
 
-export class Velocity {
+export class Vector {
 
     constructor(
         private _x: number = 0,
@@ -38,12 +38,10 @@ export class Velocity {
     }
 
     public getProjection(): Projection {
-        let result: Projection = {
+        return {
             x: this.x + this.z / SQRT_2,
             y: this.y + this.z / SQRT_2,
         };
-
-        return result;
     }
 
 }
@@ -55,7 +53,7 @@ export class Object3D {
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
-    private velocity: Velocity;
+    private velocity: Vector;
 
     set x(value: number) {
         this._x = value;
@@ -83,12 +81,11 @@ export class Object3D {
     }
 
     constructor(
-        scene: Phaser.Scene,
         x: number, y: number, z: number, 
-        texture: string | Phaser.Textures.Texture, frame: string | number
+        sprite: Phaser.GameObjects.Sprite,
     ) {
-        this.sprite = new Phaser.GameObjects.Sprite(scene, x, y, texture, frame);
-        this.velocity = new Velocity();
+        this.sprite = sprite;
+        this.velocity = new Vector();
         this.x = x;
         this.y = y;
         this.z = z;

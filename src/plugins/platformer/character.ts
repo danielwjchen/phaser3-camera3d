@@ -56,6 +56,7 @@ export class Character {
         platform: Platform,
         x: number, 
         y: number, 
+        z: number,
         texture: string | Phaser.Textures.Texture, 
         frame?: string | number,
         runningVelocity: number=400, 
