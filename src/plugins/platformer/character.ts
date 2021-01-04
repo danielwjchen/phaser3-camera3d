@@ -119,45 +119,20 @@ export class Character {
     }
 
     private changeDirection(command: Command) {
-        if (command.Left) {
-            if (
-                this.directionX === Direction.Right
-                || !this.isFlipped
-            ) {
+        if (
+            command.Left || command.Down
+        ) {
+            if (!this.isFlipped) {
                 this.sprite.flipX = !this.sprite.flipX;
             }
             this.isFlipped = true;
             this.directionX = Direction.Left;
-
-        } else if (command.Right) {
-            if (
-                this.directionX === Direction.Left
-                || this.isFlipped
-            ) {
+        } else if (command.Right || command.Up) {
+            if (this.isFlipped) {
                 this.sprite.flipX = !this.sprite.flipX;
             }
             this.isFlipped = false;
             this.directionX = Direction.Right;
-        }
-        if (command.Down) {
-            if (
-                this.directionY === Direction.Up
-                || !this.isFlipped
-            ) {
-                this.sprite.flipX = !this.sprite.flipX;
-            }
-            this.isFlipped = true;
-            this.directionY = Direction.Down;
-
-        } else if (command.Up) {
-            if (
-                this.directionY === Direction.Down
-                || this.isFlipped
-            ) {
-                this.sprite.flipX = !this.sprite.flipX;
-            }
-            this.isFlipped = false;
-            this.directionY = Direction.Up;
         }
     }
 
