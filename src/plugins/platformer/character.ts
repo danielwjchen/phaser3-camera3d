@@ -96,12 +96,10 @@ export class Character {
     }
 
     private getVelocity(command: Command, isRunning: boolean): number {
-        let velocity = 0;
-        if (isRunning && (command.Left || command.Right)) {
-            velocity = this.runningVelocity;
-        } else {
-            velocity = this.walkingVelocity;
-        }
+        let velocity: number = 
+            isRunning
+            ? this.runningVelocity
+            : this.walkingVelocity;
         if (
             (command.Right || command.Left) &&
             (command.Down || command.Up)
@@ -181,11 +179,7 @@ export class Character {
             return;
         }
         this.changeDirection(command);
-        if (isRunning && (command.Left || command.Right)) {
-            this.currentStatus = 'run';
-        } else {
-            this.currentStatus = 'walk';
-        }
+        this.currentStatus = isRunning ? 'run' : 'walk';
         this.sprite.anims.play(this.currentStatus, true);
         let velocity = this.getVelocity(command, isRunning);
         let velocityX: number = 0;
