@@ -97,4 +97,10 @@ export class Object3D {
         this.velocity.z = z;
     }
 
+    public stop() {
+        this.velocity.x = 0;
+        this.velocity.y = 0;
+        this.velocity.z = 0;
+    }
+
 }

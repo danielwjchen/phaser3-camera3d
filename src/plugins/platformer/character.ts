@@ -1,5 +1,4 @@
 import * as  Phaser from 'phaser';
-import { from } from 'rxjs';
 import { Platform } from './platform';
 import { SQRT_2 } from './object3d';
 
@@ -76,9 +75,6 @@ export class Character {
         this.physicsBody.setCollideWorldBounds(true);
         this.physicsBody.allowGravity = false;
         this.stand();
-        this.platform.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
-            this.update();
-        });
     }
 
     /**

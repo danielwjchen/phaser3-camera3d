@@ -6,6 +6,7 @@ export const PLUGIN_PLATFORMER: string = 'PlatformerPlugin';
 export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
 
     public platform: Platform | undefined;
+    public characters: Character[] = [];
 
     constructor(
         scene: Phaser.Scene,
@@ -15,6 +16,11 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         pluginManager.registerGameObject(
             GAME_OBJECT_TYPE_CHARACTER, this.createCharacter
         );
+        this.scene.events.once(Phaser.Scenes.Events.READY, () => {
+            this.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
+                this.characters.forEach(character => character.update());
+            });
+        });
     }
 
     public createCharacter(
@@ -32,6 +38,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
             this.platform, x, y, z, texture, frame, 
             runningVelocity, walkingVelocity, jumpingVelocity
         );
+        this.characters.push(characater);
         this.scene.sys.displayList.add(characater.sprite);
         return characater;
     }
