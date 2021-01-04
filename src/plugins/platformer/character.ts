@@ -199,22 +199,22 @@ export class Character {
         } else if (command.Left) {
             velocityX -= velocity;
         }
-        let velocityY: number = 0;
+        let velocityZ: number = 0;
         if (command.Up) {
             this.directionZ = Direction.Up;
             velocityX += velocity / SQRT_2;
-            velocityY -= velocity / SQRT_2;
+            velocityZ -= velocity / SQRT_2;
         }
         if (command.Down) {
             this.directionZ = Direction.Down;
             velocityX -= velocity / SQRT_2;
-            velocityY += velocity / SQRT_2;
+            velocityZ += velocity / SQRT_2;
         }
-        if (velocityX === 0 && velocityY === 0) {
+        if (velocityX === 0 && velocityZ === 0) {
             this.stand();
         } else {
             this.physicsBody.setVelocity(
-                velocityX, velocityY
+                velocityX, velocityZ
             );
         }
     }
