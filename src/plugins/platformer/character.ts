@@ -60,8 +60,8 @@ export class Character {
         texture: string | Phaser.Textures.Texture, 
         frame?: string | number,
         runningVelocity: number=40, 
-        walkingVelocity: number=10,
-        jumpingVelocity: number=20 
+        walkingVelocity: number=8,
+        jumpingVelocity: number=16 
     ) {
         this.sprite = new Phaser.GameObjects.Sprite(platform.scene, x, y, texture, frame);
         this.object3d = new Object3D(x, y, z, this.sprite);

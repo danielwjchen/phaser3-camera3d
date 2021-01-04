@@ -28,8 +28,8 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         texture: string | Phaser.Textures.Texture, 
         frame?: string | number,
         runningVelocity: number=40, 
-        walkingVelocity: number=10,
-        jumpingVelocity: number=20 
+        walkingVelocity: number=8,
+        jumpingVelocity: number=16 
     ): Character {
         if (!this.platform) {
             throw new Error('Platform is not created');
