@@ -37,23 +37,23 @@ export class Vector {
         return this._z;
     }
 
-    public getProjection(): Projection {
-        return {
-            x: this.x + this.z / SQRT_2,
-            y: this.y + this.z / SQRT_2,
-        };
-    }
+}
 
+export function getProjection(x: number, y: number, z: number): Projection {
+    return {
+        x: x + z / SQRT_2,
+        y: y - z / SQRT_2,
+    };
 }
 
 export class Object3D {
 
     public sprite: Phaser.GameObjects.Sprite;
+    public velocity: Vector;
 
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
-    private velocity: Vector;
 
     set x(value: number) {
         this._x = value;
@@ -91,16 +91,31 @@ export class Object3D {
         this.z = z;
     }
 
+    public setSpritePosition() {
+        let projection: Projection = getProjection(
+            this.x, this.y, this.z
+        );
+        this.sprite.setPosition(projection.x, projection.y)
+    }
+
     public setVelocity(x: number, y: number, z: number) {
         this.velocity.x = x;
         this.velocity.y = y;
         this.velocity.z = z;
     }
 
+    public update() {
+        this.x += this.velocity.x;
+        this.y += this.velocity.y;
+        this.z += this.velocity.z;
+        this.setSpritePosition();
+    }
+
     public stop() {
         this.velocity.x = 0;
         this.velocity.y = 0;
         this.velocity.z = 0;
+        this.setSpritePosition();
     }
 
 }

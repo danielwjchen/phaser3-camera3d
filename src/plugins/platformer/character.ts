@@ -1,6 +1,6 @@
 import * as  Phaser from 'phaser';
 import { Platform } from './platform';
-import { SQRT_2 } from './object3d';
+import { Object3D, SQRT_2 } from './object3d';
 
 export enum Direction {
     Up,
@@ -34,7 +34,7 @@ export class Character {
     private currentStatus: string = '';
     private directionX: Direction.Right | Direction.Left;
     private directionZ: Direction.Up | Direction.Down | null = null;
-    private physicsBody: Phaser.Physics.Arcade.Body;
+    private physicsBody: Phaser.Physics.Arcade.Body | undefined;
     private attackSequence: string[] = [
         'right_punch',
         'left_punch',
@@ -48,6 +48,7 @@ export class Character {
     private yBeforeJumping: number | null = null;
     private platform: Platform;
     private isFlipped: boolean = false;
+    private object3d: Object3D;
 
     public sprite: Phaser.GameObjects.Sprite;
 
@@ -58,22 +59,24 @@ export class Character {
         z: number,
         texture: string | Phaser.Textures.Texture, 
         frame?: string | number,
-        runningVelocity: number=400, 
-        walkingVelocity: number=100,
-        jumpingVelocity: number=200 
+        runningVelocity: number=40, 
+        walkingVelocity: number=10,
+        jumpingVelocity: number=20 
     ) {
         this.sprite = new Phaser.GameObjects.Sprite(platform.scene, x, y, texture, frame);
+        this.object3d = new Object3D(x, y, z, this.sprite);
+        this.object3d.setSpritePosition();
         this.platform = platform;
         this.directionX = Direction.Right;
         this.runningVelocity = runningVelocity;
         this.walkingVelocity = walkingVelocity;
         this.jumpingVelocity = jumpingVelocity;
         this.yBeforeJumping = null;
-        platform.scene.physics.world.enable(this.sprite);
-        platform.scene.add.existing(this.sprite);
-        this.physicsBody = this.sprite.body as Phaser.Physics.Arcade.Body;
-        this.physicsBody.setCollideWorldBounds(true);
-        this.physicsBody.allowGravity = false;
+        // platform.scene.physics.world.enable(this.sprite);
+        // platform.scene.add.existing(this.sprite);
+        // this.physicsBody = this.sprite.body as Phaser.Physics.Arcade.Body;
+        // this.physicsBody.setCollideWorldBounds(true);
+        // this.physicsBody.allowGravity = false;
         this.stand();
     }
 
@@ -86,7 +89,8 @@ export class Character {
         }
         this.nextAttackSequence = null;
         this.yBeforeJumping = null;
-        this.physicsBody.stop();
+        // this.physicsBody.stop();
+        this.object3d.stop();
         this.currentStatus = 'stand';
         this.sprite.anims.play(this.currentStatus);
     }
@@ -191,27 +195,29 @@ export class Character {
         let velocity = this.getVelocity(command, isRunning);
         let velocityX: number = 0;
         if (command.Right) {
+            this.directionX = Direction.Right;
             velocityX += velocity;
         } else if (command.Left) {
+            this.directionX = Direction.Left;
             velocityX -= velocity;
         }
         let velocityZ: number = 0;
         if (command.Up) {
             this.directionZ = Direction.Up;
-            velocityX += velocity / SQRT_2;
-            velocityZ -= velocity / SQRT_2;
+            velocityZ += velocity;
         }
         if (command.Down) {
             this.directionZ = Direction.Down;
-            velocityX -= velocity / SQRT_2;
-            velocityZ += velocity / SQRT_2;
+            velocityZ -= velocity;
         }
         if (velocityX === 0 && velocityZ === 0) {
             this.stand();
         } else {
-            this.physicsBody.setVelocity(
-                velocityX, velocityZ
-            );
+            // this.physicsBody.setVelocity(
+            //     velocityX, velocityZ
+            // );
+            this.object3d.velocity.x = velocityX;
+            this.object3d.velocity.z = velocityZ;
         }
     }
 
@@ -224,20 +230,23 @@ export class Character {
         this.currentStatus = 'jump';
         this.sprite.anims.play(this.currentStatus).on('animationcomplete',  () => {
             if (this.sprite.anims.getName() === 'jump') {
-                this.yBeforeJumping = this.physicsBody.y;
-                this.physicsBody.setVelocityY(this.jumpingVelocity * -1);
-                this.physicsBody.setAccelerationY(this.jumpingVelocity);
+                // this.yBeforeJumping = this.physicsBody.y;
+                // this.physicsBody.setVelocityY(this.jumpingVelocity * -1);
+                // this.physicsBody.setAccelerationY(this.jumpingVelocity);
+                this.object3d.velocity.y = this.jumpingVelocity;
             }
         });
     }
 
     public update() {
+        this.object3d.update();
         if (this.currentStatus === 'jump') {
             if (
-                this.yBeforeJumping !== null &&
-                this.physicsBody.y >= this.yBeforeJumping
+                this.yBeforeJumping !== null
+                // && this.physicsBody.y >= this.yBeforeJumping
+                && this.object3d.velocity.y >= this.yBeforeJumping
             ) {
-                this.physicsBody.y = this.yBeforeJumping;
+                this.object3d.velocity.y = this.yBeforeJumping;
                 this.stand();
             }
             return;
@@ -269,7 +278,8 @@ export class Character {
                 velocity *= -1;
 
             }
-            this.physicsBody.setVelocityX(velocity);
+            // this.physicsBody.setVelocityX(velocity);
+            this.object3d.velocity.x = velocity;
             this.currentStatus = attackSequence;
             this.sprite.anims.play(this.currentStatus).once(
                 'animationcomplete',  
@@ -288,12 +298,15 @@ export class Character {
         if (this.currentStatus === 'guard' && !isAttackedFromBehind) {
             this.currentStatus = 'guard_attacked';
             if (directionX === Direction.Right) {
-                this.physicsBody.setVelocityX(this.walkingVelocity * 0.25);
+                // this.physicsBody.setVelocityX(this.walkingVelocity * 0.25);
+                this.object3d.velocity.x = this.walkingVelocity * 0.25;
             } else {
-                this.physicsBody.setVelocityX(this.walkingVelocity * -0.25);
+                // this.physicsBody.setVelocityX(this.walkingVelocity * -0.25);
+                this.object3d.velocity.x = this.walkingVelocity * -0.25;
             }
             this.sprite.anims.play(this.currentStatus).once('animationcomplete', () => {
-                this.physicsBody.setVelocityX(0);
+                // this.physicsBody.setVelocityX(0);
+                this.object3d.velocity.x = 0;
                 if (this.sprite.anims.getName() !== 'guard_attacked') {
                     return;
                 }
@@ -301,14 +314,16 @@ export class Character {
             });
         } else {
             if (directionX === Direction.Right) {
-                this.physicsBody.setVelocityX(this.walkingVelocity);
+                // this.physicsBody.setVelocityX(this.walkingVelocity);
+                this.object3d.velocity.x = this.walkingVelocity;
                 if (this.directionX === Direction.Right) {
                     this.currentStatus = 'falling_forward'
                 } else {
                     this.currentStatus = 'falling_backward'
                 }
             } else {
-                this.physicsBody.setVelocityX(this.walkingVelocity * -1);
+                // this.physicsBody.setVelocityX(this.walkingVelocity * -1);
+                this.object3d.velocity.x = this.walkingVelocity * -1;
                 if (this.directionX === Direction.Right) {
                     this.currentStatus = 'falling_backward'
                 } else {
@@ -318,14 +333,16 @@ export class Character {
             this.sprite.anims.play(this.currentStatus).once('animationcomplete', () => {
                 this.nextAttackSequence = null;
                 this.yBeforeJumping = null;
-                this.physicsBody.stop();
+                // this.physicsBody.stop();
+                this.object3d.stop();
                 this.sprite.scene.time.addEvent({
                     delay: knockOutDelay,
                     callback: () => {
                         this.stand()
                         this.nextAttackSequence = null;
                         this.yBeforeJumping = null;
-                        this.physicsBody.stop();
+                        // this.physicsBody.stop();
+                        this.object3d.stop();
                         this.currentStatus = 'stand';
                         this.sprite.anims.play(this.currentStatus);
                     },
@@ -340,7 +357,8 @@ export class Character {
         }
         this.nextAttackSequence = null;
         this.yBeforeJumping = null;
-        this.physicsBody.stop();
+        // this.physicsBody.stop();
+        this.object3d.stop();
         this.currentStatus = 'guard';
         this.sprite.anims.play(this.currentStatus);
     }
