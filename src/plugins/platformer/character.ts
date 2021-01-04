@@ -116,21 +116,32 @@ export class Character {
         ].includes(this.currentStatus);
     }
 
+    private setFlipped(isFlipped: boolean) {
+        if (this.isFlipped !== isFlipped) {
+            this.sprite.flipX = !this.sprite.flipX;
+        }
+        this.isFlipped = isFlipped;
+    }
+
     private changeDirection(command: Command) {
-        if (
+        if (command.Right && command.Down) {
+            this.setFlipped(false);
+        } else if (
             command.Left || command.Down
         ) {
-            if (!this.isFlipped) {
-                this.sprite.flipX = !this.sprite.flipX;
-            }
-            this.isFlipped = true;
-            this.directionX = Direction.Left;
+            this.setFlipped(true);
         } else if (command.Right || command.Up) {
-            if (this.isFlipped) {
-                this.sprite.flipX = !this.sprite.flipX;
-            }
-            this.isFlipped = false;
+            this.setFlipped(false);
+        }
+        if (command.Right) {
             this.directionX = Direction.Right;
+        } else if (command.Left) {
+            this.directionX = Direction.Left;
+        }
+        if (command.Up) {
+            this.directionY = Direction.Up;
+        } else if (command.Down) {
+            this.directionY = Direction.Down;
         }
     }
 
