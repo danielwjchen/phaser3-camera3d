@@ -5,6 +5,8 @@ export type Projection = {
     y: number,
 };
 
+const COORDINATES_TEXT_OFFSET: number = 20;
+
 export class Vector {
 
     constructor(
@@ -50,6 +52,8 @@ export class Object3D {
 
     public sprite: Phaser.GameObjects.Sprite;
     public velocity: Vector;
+    public coordinatesPlatform: Phaser.GameObjects.Text | undefined;
+    public coordinatesCanvas: Phaser.GameObjects.Text| undefined;
 
     private _x: number = 0;
     private _y: number = 0;
@@ -89,6 +93,33 @@ export class Object3D {
         this.x = x;
         this.y = y;
         this.z = z;
+        let coordinatesPosition = this.getCoordinatesTextPosition();
+        this.coordinatesCanvas = this.sprite.scene.add.text(
+            coordinatesPosition.x, coordinatesPosition.y, this.getCoordinatesCanvas(), { color: '#00ff00' }
+        ).setDepth(this.z);
+        this.coordinatesPlatform = this.sprite.scene.add.text(
+            coordinatesPosition.x, coordinatesPosition.y + COORDINATES_TEXT_OFFSET, this.getCoordinatesPlatform(), { color: '#00ff00' }
+        ).setDepth(this.z);
+    }
+
+    private getCoordinatesTextPosition(): Projection {
+        let projection: Projection = getProjection(
+            this.x, this.y, this.z
+        );
+        projection.y += this.sprite.height / 2 + COORDINATES_TEXT_OFFSET;
+
+        return projection;
+    }
+
+    private getCoordinatesCanvas(): string {
+        let projection: Projection = getProjection(
+            this.x, this.y, this.z
+        );
+        return `(${projection.x}, ${projection.y})`;
+    }
+
+    private getCoordinatesPlatform(): string {
+        return `(${this.x}, ${this.y}, ${this.z})`;
     }
 
     public setSpritePosition() {
@@ -109,6 +140,9 @@ export class Object3D {
         this.y += this.velocity.y;
         this.z += this.velocity.z;
         this.setSpritePosition();
+        let coordinatesPosition = this.getCoordinatesTextPosition();
+        this.coordinatesCanvas?.setPosition(coordinatesPosition.x, coordinatesPosition.y);
+        this.coordinatesPlatform?.setPosition(coordinatesPosition.x, coordinatesPosition.y + COORDINATES_TEXT_OFFSET);
     }
 
     public stop() {

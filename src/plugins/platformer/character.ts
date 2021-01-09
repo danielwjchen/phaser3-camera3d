@@ -63,7 +63,9 @@ export class Character {
         walkingVelocity: number=8,
         jumpingVelocity: number=16 
     ) {
-        this.sprite = new Phaser.GameObjects.Sprite(platform.scene, x, y, texture, frame);
+        this.sprite = new Phaser.GameObjects.Sprite(
+            platform.scene, x, y, texture, frame
+        );
         this.object3d = new Object3D(x, y, z, this.sprite);
         this.object3d.setSpritePosition();
         this.platform = platform;
