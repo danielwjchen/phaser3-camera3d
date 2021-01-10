@@ -52,8 +52,7 @@ export class Object3D {
 
     public sprite: Phaser.GameObjects.Sprite;
     public velocity: Vector;
-    public coordinatesPlatform: Phaser.GameObjects.Text | undefined;
-    public coordinatesCanvas: Phaser.GameObjects.Text| undefined;
+    public coordinatesText: Phaser.GameObjects.Text | undefined;
 
     private _x: number = 0;
     private _y: number = 0;
@@ -94,11 +93,8 @@ export class Object3D {
         this.y = y;
         this.z = z;
         let coordinatesPosition = this.getCoordinatesTextPosition();
-        this.coordinatesCanvas = this.sprite.scene.add.text(
-            coordinatesPosition.x, coordinatesPosition.y, this.getCoordinatesCanvas(), { color: '#00ff00' }
-        ).setDepth(this.z);
-        this.coordinatesPlatform = this.sprite.scene.add.text(
-            coordinatesPosition.x, coordinatesPosition.y + COORDINATES_TEXT_OFFSET, this.getCoordinatesPlatform(), { color: '#00ff00' }
+        this.coordinatesText = this.sprite.scene.add.text(
+            coordinatesPosition.x, coordinatesPosition.y, this.getCoordinatesText(), { color: '#00ff00' }
         ).setDepth(this.z);
     }
 
@@ -111,15 +107,14 @@ export class Object3D {
         return projection;
     }
 
-    private getCoordinatesCanvas(): string {
+    private getCoordinatesText(): string[] {
         let projection: Projection = getProjection(
             this.x, this.y, this.z
         );
-        return `(${projection.x}, ${projection.y})`;
-    }
-
-    private getCoordinatesPlatform(): string {
-        return `(${this.x}, ${this.y}, ${this.z})`;
+        return [
+            `(${Math.round(projection.x)}, ${Math.round(projection.y)})`,
+            `(${this.x}, ${this.y}, ${this.z})`,
+        ];
     }
 
     public setSpritePosition() {
@@ -141,8 +136,10 @@ export class Object3D {
         this.z += this.velocity.z;
         this.setSpritePosition();
         let coordinatesPosition = this.getCoordinatesTextPosition();
-        this.coordinatesCanvas?.setPosition(coordinatesPosition.x, coordinatesPosition.y);
-        this.coordinatesPlatform?.setPosition(coordinatesPosition.x, coordinatesPosition.y + COORDINATES_TEXT_OFFSET);
+        this.coordinatesText?.setPosition(
+            coordinatesPosition.x, coordinatesPosition.y
+        );
+        this.coordinatesText?.setText(this.getCoordinatesText());
     }
 
     public stop() {
