@@ -1,4 +1,4 @@
-const RADIAN_45: number = 0.7853982;
+import { RADIAN_45 } from './constants';
 
 export class Platform {
     public scene: Phaser.Scene;

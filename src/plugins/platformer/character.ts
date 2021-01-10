@@ -1,6 +1,6 @@
 import * as  Phaser from 'phaser';
 import { Platform } from './platform';
-import { Object3D, SQRT_2 } from './object3d';
+import { Object3D } from './object3d';
 
 export enum Direction {
     Up,

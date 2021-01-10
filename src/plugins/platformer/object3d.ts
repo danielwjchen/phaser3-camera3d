@@ -1,4 +1,4 @@
-export const SQRT_2: number = 1.41421356237;
+import { SQRT_2 } from './constants';
 
 export type Projection = {
     x: number,
