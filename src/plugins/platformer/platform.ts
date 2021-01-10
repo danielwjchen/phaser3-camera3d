@@ -1,15 +1,15 @@
 import { RADIAN_45, SQRT_2 } from './constants';
 
 export class Platform {
-    public scene: Phaser.Scene;
 
-    constructor(scene: Phaser.Scene) {
-        this.scene = scene;
+    constructor(
+        public scene: Phaser.Scene, public width: number, public length: number
+    ) {
         let gridColor: number = 0x0B610B;
-        let yHorizon: number = this.scene.game.canvas.height / 2;
-        let yOffsetForUi: number = this.scene.game.canvas.height / 5;
+        let yHorizon: number = this.width / 2;
+        let yOffsetForUi: number = this.width / 5;
 
-        let yStage: number = this.scene.game.canvas.height - yOffsetForUi;
+        let yStage: number = this.width - yOffsetForUi;
         let gridSize: number = (yHorizon - yOffsetForUi) / 5;
         this.createLinesX(gridSize, gridColor, yStage, yHorizon);
         this.createLinesZ(gridSize, gridColor, yStage, yHorizon);
@@ -22,9 +22,9 @@ export class Platform {
     ) {
         for (let i: number = start; i >= end; i = i - 1 * gridSize) {
             this.scene.add.line(
-                0 + this.scene.game.canvas.width / 2, i, 
+                0 + this.length / 2, i, 
                 0, 0, 
-                this.scene.game.canvas.width, 0, 
+                this.length, 0, 
                 gridColor
             );
         }
@@ -38,11 +38,11 @@ export class Platform {
         let base: number = height;
         for (
             let i: number = 0; 
-            i < (this.scene.game.canvas.width + base); 
+            i < (this.length + base); 
             i = i + gridSize * SQRT_2
         ) {
             let line = this.scene.add.line(
-                i, this.scene.game.canvas.height / 2, 
+                i, this.width / 2, 
                 0, 0, 
                 0, slope, 
                 gridColor

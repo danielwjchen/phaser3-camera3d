@@ -43,8 +43,8 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         return characater;
     }
 
-    public createPlatform() {
-        this.platform = new Platform(this.scene);
+    public createPlatform(width: number, length: number) {
+        this.platform = new Platform(this.scene, width, length);
     }
 
 }
