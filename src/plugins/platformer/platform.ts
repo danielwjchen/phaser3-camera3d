@@ -1,4 +1,4 @@
-import { RADIAN_45 } from './constants';
+import { RADIAN_45, SQRT_2 } from './constants';
 
 export class Platform {
     public scene: Phaser.Scene;
@@ -36,7 +36,11 @@ export class Platform {
         let height: number = start - end;
         let slope: number = height * 1.41;
         let base: number = height;
-        for (let i: number = 0; i < (this.scene.game.canvas.width + base); i = i + gridSize) {
+        for (
+            let i: number = 0; 
+            i < (this.scene.game.canvas.width + base); 
+            i = i + gridSize * SQRT_2
+        ) {
             let line = this.scene.add.line(
                 i, this.scene.game.canvas.height / 2, 
                 0, 0, 
