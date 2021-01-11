@@ -1,3 +1,5 @@
+import { SQRT_2_DIV_2 } from './constants';
+
 const COLOR_GRID: number = 0x00aa00;
 
 export class Platform {
@@ -37,11 +39,12 @@ export class Platform {
     }
 
     private createPlane() {
+        let projectedX: number = this.projectedWidth * SQRT_2_DIV_2;
         let polygon: Phaser.Geom.Polygon = new Phaser.Geom.Polygon([
             this.startingCanvasX, this.startingCanvasY,
+            this.startingCanvasX + projectedX, this.startingCanvasY - projectedX,
+            this.startingCanvasX + projectedX + this.projectedLength, this.startingCanvasY - projectedX,
             this.startingCanvasX + this.projectedLength, this.startingCanvasY,
-            this.startingCanvasX + this.projectedWidth + this.projectedLength, this.startingCanvasY - this.projectedWidth,
-            this.startingCanvasX + this.projectedWidth, this.startingCanvasY - this.projectedWidth,
             this.startingCanvasX, this.startingCanvasY,
         ]);
 
@@ -67,10 +70,10 @@ export class Platform {
             i++
         ) {
             let line: Phaser.Geom.Line = new Phaser.Geom.Line(
-                this.startingCanvasX + i * this.gridSize, 
-                this.startingCanvasY - i * this.gridSize, 
-                this.startingCanvasX + i * this.gridSize + this.projectedLength, 
-                this.startingCanvasY - i * this.gridSize, 
+                this.startingCanvasX + SQRT_2_DIV_2 * i * this.gridSize, 
+                this.startingCanvasY - SQRT_2_DIV_2 * i * this.gridSize, 
+                this.startingCanvasX + SQRT_2_DIV_2 * i * this.gridSize + this.projectedLength, 
+                this.startingCanvasY - SQRT_2_DIV_2 * i * this.gridSize, 
             );;
             
             this.graphics.strokeLineShape(line);
@@ -84,8 +87,8 @@ export class Platform {
             let line: Phaser.Geom.Line = new Phaser.Geom.Line(
                 this.startingCanvasX + i * this.gridSize, 
                 this.startingCanvasY, 
-                this.startingCanvasX + (i + this.width) * this.gridSize, 
-                this.startingCanvasY - this.projectedWidth, 
+                this.startingCanvasX + this.width * this.gridSize * SQRT_2_DIV_2 + this.gridSize * i, 
+                this.startingCanvasY - this.projectedWidth * SQRT_2_DIV_2, 
             );;
             
             this.graphics.strokeLineShape(line);
