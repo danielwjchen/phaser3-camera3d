@@ -12,8 +12,8 @@ export class Platform {
     public scene: Phaser.Scene;
     public width: number;
     public length: number;
-    public projectedWidth: number;
-    public projectedLength: number;
+    public widthInPixels: number;
+    public lengthInPixels: number;
     public startingCanvasX: number;
     public startingCanvasY: number;
 
@@ -23,10 +23,10 @@ export class Platform {
         this.scene = scene;
         this.width = width;
         this.length = length;
-        this.projectedWidth = this.width * this.gridSize;
-        this.projectedLength = this.length * this.gridSize;
-        this.startingCanvasX = this.scene.game.canvas.width / 2 - this.projectedWidth;
-        this.startingCanvasY = this.scene.game.canvas.height / 2 + this.projectedWidth / 2;
+        this.widthInPixels = this.width * this.gridSize;
+        this.lengthInPixels = this.length * this.gridSize;
+        this.startingCanvasX = this.scene.game.canvas.width / 2 - this.widthInPixels;
+        this.startingCanvasY = this.scene.game.canvas.height / 2 + this.widthInPixels / 2;
         this.graphics = this.scene.add.graphics({ 
             x: 0, y: 0 ,
             lineStyle: { width: 2, color: COLOR_GRID } 
@@ -39,12 +39,12 @@ export class Platform {
     }
 
     private createPlane() {
-        let projectedX: number = this.projectedWidth * SQRT_2_DIV_2;
+        let projectedX: number = this.widthInPixels * SQRT_2_DIV_2;
         let polygon: Phaser.Geom.Polygon = new Phaser.Geom.Polygon([
             this.startingCanvasX, this.startingCanvasY,
             this.startingCanvasX + projectedX, this.startingCanvasY - projectedX,
-            this.startingCanvasX + projectedX + this.projectedLength, this.startingCanvasY - projectedX,
-            this.startingCanvasX + this.projectedLength, this.startingCanvasY,
+            this.startingCanvasX + projectedX + this.lengthInPixels, this.startingCanvasY - projectedX,
+            this.startingCanvasX + this.lengthInPixels, this.startingCanvasY,
             this.startingCanvasX, this.startingCanvasY,
         ]);
 
@@ -72,7 +72,7 @@ export class Platform {
             let line: Phaser.Geom.Line = new Phaser.Geom.Line(
                 this.startingCanvasX + SQRT_2_DIV_2 * i * this.gridSize, 
                 this.startingCanvasY - SQRT_2_DIV_2 * i * this.gridSize, 
-                this.startingCanvasX + SQRT_2_DIV_2 * i * this.gridSize + this.projectedLength, 
+                this.startingCanvasX + SQRT_2_DIV_2 * i * this.gridSize + this.lengthInPixels, 
                 this.startingCanvasY - SQRT_2_DIV_2 * i * this.gridSize, 
             );;
             
@@ -88,7 +88,7 @@ export class Platform {
                 this.startingCanvasX + i * this.gridSize, 
                 this.startingCanvasY, 
                 this.startingCanvasX + this.width * this.gridSize * SQRT_2_DIV_2 + this.gridSize * i, 
-                this.startingCanvasY - this.projectedWidth * SQRT_2_DIV_2, 
+                this.startingCanvasY - this.widthInPixels * SQRT_2_DIV_2, 
             );;
             
             this.graphics.strokeLineShape(line);
