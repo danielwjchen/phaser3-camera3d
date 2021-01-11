@@ -65,7 +65,7 @@ export class MainScene extends Phaser.Scene {
             return;
 
         }
-        this.platformer.createPlatform(this.game.canvas.height / 2, this.game.canvas.width);
+        this.platformer.createPlatform(6, 6);
         let character: Character = this.platformer.createCharacter(
             this.cameras.main.centerX, 
             this.cameras.main.centerY, 

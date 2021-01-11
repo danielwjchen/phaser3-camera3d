@@ -1,85 +1,95 @@
-import { RADIAN_45, SQRT_2 } from './constants';
-
 const COLOR_GRID: number = 0x00aa00;
 
 export class Platform {
 
-    constructor(
-        public scene: Phaser.Scene, public width: number, public length: number
-    ) {
-        let yHorizon: number = this.width / 2;
-        let yOffsetForUi: number = this.width / 5;
+    private gridSize: integer = 40;
+    private linesHorizontal: Phaser.Geom.Line[] = [];
+    private linesVertical: Phaser.Geom.Line[] = [];
+    private graphics: Phaser.GameObjects.Graphics;
 
-        let yStage: number = this.width - yOffsetForUi;
-        let gridSize: number = (yHorizon - yOffsetForUi) / 5;
+    public scene: Phaser.Scene;
+    public width: number;
+    public length: number;
+    public projectedWidth: number;
+    public projectedLength: number;
+    public startingCanvasX: number;
+    public startingCanvasY: number;
+
+    constructor(
+        scene: Phaser.Scene, width: number, length: number
+    ) {
+        this.scene = scene;
+        this.width = width;
+        this.length = length;
+        this.projectedWidth = this.width * this.gridSize;
+        this.projectedLength = this.length * this.gridSize;
+        this.startingCanvasX = this.scene.game.canvas.width / 2 - this.projectedWidth;
+        this.startingCanvasY = this.scene.game.canvas.height / 2 + this.projectedWidth / 2;
+        this.graphics = this.scene.add.graphics({ 
+            x: 0, y: 0 ,
+            lineStyle: { width: 2, color: COLOR_GRID } 
+        });
+
         this.createPlane();
-        // this.createLinesX(gridSize, COLOR_GRID, yStage, yHorizon);
-        // this.createLinesZ(gridSize, COLOR_GRID, yStage, yHorizon);
+        this.createLinesHorizontal();
+        this.createLinesVertical();
 
     }
 
     private createPlane() {
-        let offset: number = (SQRT_2 / 2) * this.width;
-        let startingCanvasX: number = this.scene.game.canvas.width / 2 - offset;
-        let startingCanvasY: number = this.scene.game.canvas.height / 2 + this.width / 2;
         let polygon: Phaser.Geom.Polygon = new Phaser.Geom.Polygon([
-            startingCanvasX, startingCanvasY,
-            startingCanvasX + offset, startingCanvasY - offset,
-            startingCanvasX + this.length + offset, startingCanvasY - offset,
-            startingCanvasX + this.length, startingCanvasY,
-            startingCanvasX, startingCanvasY,
+            this.startingCanvasX, this.startingCanvasY,
+            this.startingCanvasX + this.projectedLength, this.startingCanvasY,
+            this.startingCanvasX + this.projectedWidth + this.projectedLength, this.startingCanvasY - this.projectedWidth,
+            this.startingCanvasX + this.projectedWidth, this.startingCanvasY - this.projectedWidth,
+            this.startingCanvasX, this.startingCanvasY,
         ]);
 
-        let graphics = this.scene.add.graphics({ x: 0, y: 0 });
+        this.graphics.beginPath();
 
-        graphics.lineStyle(2, COLOR_GRID);
+        this.graphics.moveTo(polygon.points[0].x, polygon.points[0].y);
 
-        graphics.beginPath();
-
-        graphics.moveTo(polygon.points[0].x, polygon.points[0].y);
-
-        for (var i = 1; i < polygon.points.length; i++)
-        {
-            graphics.lineTo(polygon.points[i].x, polygon.points[i].y);
+        for (let i: number = 1; i < polygon.points.length; i++) {
+            this.graphics.lineTo(polygon.points[i].x, polygon.points[i].y);
         }
 
-        graphics.closePath();
-        graphics.strokePath();
+        this.graphics.closePath();
+        this.graphics.strokePath();
     }
 
 
-    private createLinesX(
-        gridSize: number, gridColor: number, start: number, end: number
-    ) {
-        for (let i: number = start; i >= end; i = i - 1 * gridSize) {
-            this.scene.add.line(
-                0 + this.length / 2, i, 
-                0, 0, 
-                this.length, 0, 
-                gridColor
-            );
-        }
-    }
-
-    private createLinesZ(
-        gridSize: number, gridColor: number, start: number, end: number
-    ) {
-        let height: number = start - end;
-        let slope: number = height * 1.41;
-        let base: number = height;
+    private createLinesHorizontal() {
+        this.linesHorizontal = [];
+        
         for (
             let i: number = 0; 
-            i < (this.length + base); 
-            i = i + gridSize * SQRT_2
+            i < this.width; 
+            i++
         ) {
-            let line = this.scene.add.line(
-                i, this.width / 2, 
-                0, 0, 
-                0, slope, 
-                gridColor
-            );
-            line.setOrigin(0, 0);
-            line.setRotation(RADIAN_45);
+            let line: Phaser.Geom.Line = new Phaser.Geom.Line(
+                this.startingCanvasX + i * this.gridSize, 
+                this.startingCanvasY - i * this.gridSize, 
+                this.startingCanvasX + i * this.gridSize + this.projectedLength, 
+                this.startingCanvasY - i * this.gridSize, 
+            );;
+            
+            this.graphics.strokeLineShape(line);
+            this.linesHorizontal.push(line);
+        }
+    }
+
+    private createLinesVertical() {
+        this.linesVertical = [];
+        for (let i: number = 1; i < this.length; i++) {
+            let line: Phaser.Geom.Line = new Phaser.Geom.Line(
+                this.startingCanvasX + i * this.gridSize, 
+                this.startingCanvasY, 
+                this.startingCanvasX + (i + this.width) * this.gridSize, 
+                this.startingCanvasY - this.projectedWidth, 
+            );;
+            
+            this.graphics.strokeLineShape(line);
+            this.linesVertical.push(line);
         }
     }
 
