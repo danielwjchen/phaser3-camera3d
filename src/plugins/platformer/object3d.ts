@@ -122,8 +122,8 @@ export class Object3D {
 
     private getPolygonBottom(): Phaser.Geom.Polygon {
 
-        let halfLength: number = this.sprite.width / 2;
-        let halfWidth: number = this.sprite.width / 3;
+        let halfLength: number = this.sprite.width / 3;
+        let halfWidth: number = this.sprite.width / 4;
         let halfHeight: number = this.sprite.height / 2;
 
         let projection0: Projection = getProjection(
@@ -161,8 +161,8 @@ export class Object3D {
 
     private getPolygonTop(): Phaser.Geom.Polygon {
 
-        let halfLength: number = this.sprite.width / 2;
-        let halfWidth: number = this.sprite.width / 3;
+        let halfLength: number = this.sprite.width / 3;
+        let halfWidth: number = this.sprite.width / 4;
         let halfHeight: number = this.sprite.height / 2;
 
         let projection0: Projection = getProjection(
