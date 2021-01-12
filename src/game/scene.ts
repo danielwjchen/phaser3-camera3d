@@ -63,9 +63,8 @@ export class MainScene extends Phaser.Scene {
         this.addCameraMovements();
         if (!this.platformer) {
             return;
-
         }
-        this.platformer.createPlatform(6, 6);
+        this.platformer.createPlatform(0, 0, 0, 6, 6);
         let character: Character = this.platformer.createCharacter(
             this.cameras.main.centerX, 
             this.cameras.main.centerY, 

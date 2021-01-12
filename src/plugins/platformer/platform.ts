@@ -1,4 +1,5 @@
 import { SQRT_2_DIV_2 } from './constants';
+import { Object3D } from './object3d';
 
 const COLOR_GRID: number = 0x00aa00;
 
@@ -8,6 +9,7 @@ export class Platform {
     private linesHorizontal: Phaser.Geom.Line[] = [];
     private linesVertical: Phaser.Geom.Line[] = [];
     private graphics: Phaser.GameObjects.Graphics;
+    private polygon: Phaser.Geom.Polygon | undefined;
 
     public scene: Phaser.Scene;
     public width: number;
@@ -17,10 +19,19 @@ export class Platform {
     public startingCanvasX: number;
     public startingCanvasY: number;
 
+    public x: number;
+    public y: number;
+    public z: number;
+
     constructor(
-        scene: Phaser.Scene, width: number, length: number
+        scene: Phaser.Scene, 
+        x: number, y: number, z: number,
+        width: number, length: number
     ) {
         this.scene = scene;
+        this.x = x;
+        this.y = y;
+        this.z = z;
         this.width = width;
         this.length = length;
         this.widthInPixels = this.width * this.gridSize;
@@ -40,7 +51,7 @@ export class Platform {
 
     private createPlane() {
         let projectedX: number = this.widthInPixels * SQRT_2_DIV_2;
-        let polygon: Phaser.Geom.Polygon = new Phaser.Geom.Polygon([
+        this.polygon = new Phaser.Geom.Polygon([
             this.startingCanvasX, this.startingCanvasY,
             this.startingCanvasX + projectedX, this.startingCanvasY - projectedX,
             this.startingCanvasX + projectedX + this.lengthInPixels, this.startingCanvasY - projectedX,
@@ -50,10 +61,14 @@ export class Platform {
 
         this.graphics.beginPath();
 
-        this.graphics.moveTo(polygon.points[0].x, polygon.points[0].y);
+        this.graphics.moveTo(
+            this.polygon.points[0].x, this.polygon.points[0].y
+        );
 
-        for (let i: number = 1; i < polygon.points.length; i++) {
-            this.graphics.lineTo(polygon.points[i].x, polygon.points[i].y);
+        for (let i: number = 1; i < this.polygon.points.length; i++) {
+            this.graphics.lineTo(
+                this.polygon.points[i].x, this.polygon.points[i].y
+            );
         }
 
         this.graphics.closePath();
@@ -96,9 +111,14 @@ export class Platform {
         }
     }
 
-    public isOutOfBound(x: number, z: number, width: number, length: number): boolean {
-        let result: boolean = false;
-        return result;
+    public isOutOfBound(object3d: Object3D): boolean {
+        return (
+            object3d.z < this.z || object3d.z + object3d.sprite.width > this.z
+        ) ;
+    }
+
+    public destroy() {
+        this.graphics.destroy();
     }
 
 }

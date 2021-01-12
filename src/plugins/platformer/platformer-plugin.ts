@@ -18,7 +18,10 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         );
         this.scene.events.once(Phaser.Scenes.Events.READY, () => {
             this.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
-                this.characters.forEach(character => character.update());
+                this.characters.forEach(character => {
+                    character.update();
+                    character.object3d.update();
+                });
             });
         });
     }
@@ -43,8 +46,11 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         return characater;
     }
 
-    public createPlatform(width: number, length: number) {
-        this.platform = new Platform(this.scene, width, length);
+    public createPlatform(
+        x: number, y:number, z:number,
+        width: number, length: number
+    ) {
+        this.platform = new Platform(this.scene, x, y, z, width, length);
     }
 
 }

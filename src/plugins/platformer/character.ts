@@ -48,8 +48,8 @@ export class Character {
     private yBeforeJumping: number | null = null;
     private platform: Platform;
     private isFlipped: boolean = false;
-    private object3d: Object3D;
 
+    public object3d: Object3D;
     public sprite: Phaser.GameObjects.Sprite;
 
     constructor(
@@ -241,7 +241,6 @@ export class Character {
     }
 
     public update() {
-        this.object3d.update();
         if (this.currentStatus === 'jump') {
             if (
                 this.yBeforeJumping !== null
