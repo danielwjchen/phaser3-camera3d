@@ -160,7 +160,9 @@ export class Character {
                 this.nextAttackSequence = null;
                 this.sprite.anims.play(this.currentStatus).once(
                     'animationcomplete',
-                    this.onAttackAnimationComplete
+                    () => {
+                        this.onAttackAnimationComplete();
+                    }
                 );
             }
         }
@@ -284,7 +286,9 @@ export class Character {
             this.currentStatus = attackSequence;
             this.sprite.anims.play(this.currentStatus).once(
                 'animationcomplete',  
-                this.onAttackAnimationComplete
+                () => {
+                    this.onAttackAnimationComplete();
+                }
             );
         } else {
             this.nextAttackSequence = attackSequence;
