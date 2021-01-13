@@ -1,6 +1,6 @@
 import * as  Phaser from 'phaser';
 import { 
-    Character, PlatformerPlugin, Command, Direction 
+    Character, PlatformerPlugin, Command, Direction, Platform 
 } from 'src/plugins/platformer';
 
 const CAMERA_ZOOM_STEP = 0.5;
@@ -64,11 +64,9 @@ export class MainScene extends Phaser.Scene {
         if (!this.platformer) {
             return;
         }
-        this.platformer.createPlatform(0, 0, 0, 6, 6);
+        let world: Platform = this.platformer.createPlatform(0, 0, 0, 6, 16);
         let character: Character = this.platformer.createCharacter(
-            this.cameras.main.centerX, 
-            this.cameras.main.centerY, 
-            0,
+            40, 0, world.centerZ,
             this.spriteName
         );
         let leftKey: Phaser.Input.Keyboard.Key = 
@@ -124,6 +122,8 @@ export class MainScene extends Phaser.Scene {
 
     update() {
         if (!this.character) { return; }
-        this.cameras.main.centerOn(this.character.sprite.x, this.character.sprite.y);
+        this.cameras.main.centerOn(
+            this.character.sprite.x, this.character.sprite.y
+        );
     }
 }

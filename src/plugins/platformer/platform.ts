@@ -1,4 +1,4 @@
-import { SQRT_2_DIV_2 } from './constants';
+import { SQRT_2, SQRT_2_DIV_2 } from './constants';
 import { Object3D } from './object3d';
 
 const COLOR_GRID: number = 0x00aa00;
@@ -22,6 +22,18 @@ export class Platform {
     public x: number;
     public y: number;
     public z: number;
+
+    get centerZ(): number {
+        return this.widthInPixels / 2 * SQRT_2;
+    }
+
+    get originCavansX(): number {
+        return this.startingCanvasX;
+    }
+
+    get originCavansY(): number {
+        return this.startingCanvasY;
+    }
 
     constructor(
         scene: Phaser.Scene, 

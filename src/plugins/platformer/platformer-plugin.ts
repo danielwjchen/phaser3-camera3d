@@ -2,6 +2,7 @@ import { Character, GAME_OBJECT_TYPE_CHARACTER } from "./character";
 import { Platform } from "./platform";
 
 export const PLUGIN_PLATFORMER: string = 'PlatformerPlugin';
+export const VELOCITY_GRAVITY: number = 1;
 
 export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
 
@@ -20,6 +21,12 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
             this.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
                 this.characters.forEach(character => {
                     character.update();
+                    // if (character.object3d.y > 0) {
+                    //     character.object3d.velocity.y -= VELOCITY_GRAVITY;
+                    // } else {
+                    //     character.object3d.velocity.y = 0;
+                    //     character.object3d.y = 0;
+                    // }
                     character.object3d.update();
                 });
             });
@@ -49,8 +56,9 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
     public createPlatform(
         x: number, y:number, z:number,
         width: number, length: number
-    ) {
+    ): Platform {
         this.platform = new Platform(this.scene, x, y, z, width, length);
+        return this.platform;
     }
 
 }

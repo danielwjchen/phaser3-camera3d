@@ -1,4 +1,5 @@
 import { SQRT_2, SQRT_2_DIV_2 } from './constants';
+import { Platform } from './platform';
 
 const COLOR_GRID: number = 0x00aa00;
 
@@ -52,6 +53,7 @@ export function getProjection(x: number, y: number, z: number): Projection {
 
 export class Object3D {
 
+    public platform: Platform;
     public sprite: Phaser.GameObjects.Sprite;
     public velocity: Vector;
     public coordinatesText: Phaser.GameObjects.Text | undefined;
@@ -87,9 +89,11 @@ export class Object3D {
     }
 
     constructor(
+        platform: Platform,
         x: number, y: number, z: number, 
         sprite: Phaser.GameObjects.Sprite,
     ) {
+        this.platform = platform;
         this.sprite = sprite;
         this.velocity = new Vector();
         this.x = x;
@@ -116,7 +120,7 @@ export class Object3D {
         );
         return [
             `(${Math.round(projection.x)}, ${Math.round(projection.y)})`,
-            `(${this.x}, ${this.y}, ${this.z})`,
+            `(${Math.round(this.x)}, ${Math.round(this.y)}, ${Math.round(this.z)})`,
         ];
     }
 
@@ -199,27 +203,33 @@ export class Object3D {
     }
 
     private drawCollisionBox() {
+        let projection: Projection = getProjection(this.x, this.y, this.z);
         if (!this.graphics) {
             this.graphics = this.sprite.scene.add.graphics({ 
-                x: this.sprite.x, y: this.sprite.y,
+                x: this.platform.originCavansX + projection.x, 
+                y: this.platform.originCavansY + projection.y,
                 lineStyle: { width: 2, color: COLOR_GRID } 
             });
         } else {
-            this.graphics.setPosition(this.sprite.x, this.sprite.y);
+            this.graphics.setPosition(
+                this.platform.originCavansX + projection.x, 
+                this.platform.originCavansY + projection.y
+            );
             this.graphics.clear();
         }
-        // let polygon: Phaser.Geom.Polygon = new Phaser.Geom.Polygon([
-        //     -1 * halfWidth, halfHeight,
-        //     -1 * halfWidth, -1 * halfHeight,
-        //     halfWidth, -1 * halfHeight,
-        //     halfWidth, halfHeight,
-        //     -1 * halfWidth, halfHeight,
-        // ]);
+        this.graphics.moveTo(
+            this.platform.originCavansX + projection.x, 
+            this.platform.originCavansY + projection.y
+        );
+        let center: Phaser.Geom.Circle = new Phaser.Geom.Circle(
+            0, 0, 2
+        );
+        this.graphics.strokeCircleShape(center);
 
 
         let polygons: Phaser.Geom.Polygon[] = [
+            this.getPolygonTop(),
             this.getPolygonBottom(),
-            this.getPolygonTop()
         ];
         polygons[0].points.forEach((point, index) => {
             let line: Phaser.Geom.Line = new Phaser.Geom.Line(
@@ -253,7 +263,10 @@ export class Object3D {
         let projection: Projection = getProjection(
             this.x, this.y, this.z
         );
-        this.sprite.setPosition(projection.x, projection.y)
+        this.sprite.setPosition(
+            this.platform.originCavansX + projection.x, 
+            this.platform.originCavansY + projection.y
+        );
     }
 
     public setVelocity(x: number, y: number, z: number) {
@@ -269,7 +282,8 @@ export class Object3D {
         this.setSpritePosition();
         let coordinatesPosition = this.getCoordinatesTextPosition();
         this.coordinatesText?.setPosition(
-            coordinatesPosition.x, coordinatesPosition.y
+            this.platform.originCavansX + coordinatesPosition.x, 
+            this.platform.originCavansY + coordinatesPosition.y
         );
         this.coordinatesText?.setText(this.getCoordinatesText());
         this.drawCollisionBox();
