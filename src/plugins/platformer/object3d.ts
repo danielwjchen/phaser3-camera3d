@@ -47,7 +47,7 @@ export class Vector {
 export function getProjection(x: number, y: number, z: number): Projection {
     return {
         x: x + z / SQRT_2,
-        y: y - z / SQRT_2,
+        y: -1 * y - z / SQRT_2,
     };
 }
 
