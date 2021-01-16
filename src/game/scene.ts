@@ -10,6 +10,11 @@ export class MainScene extends Phaser.Scene {
     private spriteName: string = 'template';
     private character: Character | undefined;
     private platformer: PlatformerPlugin | undefined;
+    private leftKey: Phaser.Input.Keyboard.Key | undefined;
+    private rightKey: Phaser.Input.Keyboard.Key | undefined;
+    private upKey: Phaser.Input.Keyboard.Key | undefined;
+    private downKey: Phaser.Input.Keyboard.Key | undefined;
+    private runKey: Phaser.Input.Keyboard.Key | undefined;
 
     constructor() {
         super({
@@ -69,35 +74,17 @@ export class MainScene extends Phaser.Scene {
             40, 0, world.centerZ,
             this.spriteName
         );
-        let leftKey: Phaser.Input.Keyboard.Key = 
+        this.leftKey = 
             this.input.keyboard.addKey('LEFT');
-        let rightKey: Phaser.Input.Keyboard.Key = 
+        this.rightKey = 
             this.input.keyboard.addKey('RIGHT');
-        let upKey: Phaser.Input.Keyboard.Key = 
+        this.upKey = 
             this.input.keyboard.addKey('UP');
-        let downKey: Phaser.Input.Keyboard.Key = 
+        this.downKey = 
             this.input.keyboard.addKey('DOWN');
-        let runKey: Phaser.Input.Keyboard.Key = 
+        this.runKey = 
             this.input.keyboard.addKey('r');
-        [
-            leftKey,
-            rightKey,
-            upKey,
-            downKey,
-            runKey,
-        ].forEach(key => {
-            ['up', 'down'].forEach(eventName => {
-                key.on(eventName, () => {
-                    let command: Command = {
-                        Up: upKey.isDown,
-                        Down: downKey.isDown,
-                        Left: leftKey.isDown,
-                        Right: rightKey.isDown,
-                    };
-                    character.go(command, runKey.isDown);
-                });
-            });
-        });
+
         this.input.keyboard.addKey('b').on('down', () => {
             character.attacked(100, Direction.Left);
         });
@@ -125,5 +112,12 @@ export class MainScene extends Phaser.Scene {
         this.cameras.main.centerOn(
             this.character.sprite.x, this.character.sprite.y
         );
+        let command: Command = {
+            Up: this?.upKey?.isDown || false,
+            Down: this?.downKey?.isDown || false,
+            Left: this?.leftKey?.isDown || false,
+            Right: this?.rightKey?.isDown || false,
+        };
+        this.character.go(command, this?.runKey?.isDown);
     }
 }
