@@ -1,9 +1,8 @@
 import { Character, GAME_OBJECT_TYPE_CHARACTER } from "./character";
-import { CuboidBounds, getProjection, Object3D, Projection, Vector } from "./object3d";
+import { CuboidBounds, getProjection, Projection, Vector } from "./object3d";
 import { Platform } from "./platform";
 
 export const PLUGIN_PLATFORMER: string = 'PlatformerPlugin';
-export const VELOCITY_GRAVITY: number = 1;
 
 function isOutOfBounds(platform: Platform, cuboidBounds: CuboidBounds): boolean {
     if (

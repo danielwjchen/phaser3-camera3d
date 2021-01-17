@@ -1,4 +1,4 @@
-import { SQRT_2, SQRT_2_DIV_2 } from './constants';
+import { GRAVITY, SQRT_2, SQRT_2_DIV_2 } from './constants';
 import { Platform } from './platform';
 
 const COLOR_GRID: number = 0x00aa00;
@@ -322,7 +322,7 @@ export class Object3D {
         this.y = y;
         this.z = z;
         if ((this.y - this.sprite.height / 2) > 0) {
-            this.velocity.y -= 1.3;
+            this.velocity.y -= GRAVITY;
         } else {
             this.velocity.y = 0;
         }
