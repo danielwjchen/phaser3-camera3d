@@ -4,25 +4,6 @@ import { Platform } from "./platform";
 
 export const PLUGIN_PLATFORMER: string = 'PlatformerPlugin';
 
-function isOutOfBounds(platform: Platform, cuboidBounds: CuboidBounds): boolean {
-    if (
-        cuboidBounds.minX < platform.x 
-        // || object3d.minY < platform.y 
-        || cuboidBounds.minZ < platform.z
-    ) {
-        return true;
-    }
-
-    if (
-        cuboidBounds.maxX > (platform.x + platform.lengthInPixels)
-        || cuboidBounds.maxZ > (platform.z + platform.widthInPixels)
-    ) {
-        return true;
-    }
-
-    return false;
-}
-
 function getBoundsOverlap(platform: Platform, cuboidBounds: CuboidBounds): Vector {
     let result: Vector = new Vector();
     if (cuboidBounds.minX < platform.x) {

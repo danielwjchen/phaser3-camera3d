@@ -28,21 +28,28 @@ let blinkFrequency: number = 10;
 
 export type Command = {[key in keyof typeof Direction]: boolean};
 
+export type STATUS_ATTACK =
+    'right_punch' | 'left_punch' |  'left_kick' | 'right_kick';
+
+export type status = 'stand' | 'jump' | 'guard' | 'guard_attacked' | 'attack' |
+    STATUS_ATTACK |
+    'falling_forward' | 'falling_backward' | 'walk' | 'run' ;
+
 export const GAME_OBJECT_TYPE_CHARACTER: string = 'character';
 
 export class Character implements ICollider {
 
-    private currentStatus: string = '';
+    private currentStatus: status = 'stand';
     private directionX: Direction.Right | Direction.Left;
     private directionZ: Direction.Up | Direction.Down | null = null;
     private physicsBody: Phaser.Physics.Arcade.Body | undefined;
-    private attackSequence: string[] = [
+    private attackSequence: STATUS_ATTACK[] = [
         'right_punch',
         'left_punch',
         'left_kick',
         'right_kick',
     ];
-    private nextAttackSequence: string | null = null;
+    private nextAttackSequence: STATUS_ATTACK | null = null;
     private runningVelocity: number;
     private walkingVelocity: number;
     private jumpingVelocity: number;
@@ -151,7 +158,7 @@ export class Character implements ICollider {
     }
 
     private onAttackAnimationComplete() {
-        if (this.attackSequence.includes(this.sprite.anims.getName())) {
+        if ((this.attackSequence as string[]).includes(this.sprite.anims.getName())) {
             if (
                 this.nextAttackSequence === null ||
                 this.sprite.anims.getName() === this.nextAttackSequence
@@ -257,21 +264,21 @@ export class Character implements ICollider {
 
     public attack() {
         let currentAttackSequenceIndex: number = 
-            this.attackSequence.indexOf(this.currentStatus);
+            (this.attackSequence as string[]).indexOf(this.currentStatus);
         if (
             currentAttackSequenceIndex === -1 && 
             !['walk', 'stand', 'run'].includes(this.currentStatus)
         ) {
             return;
         }
-        let attackSequence: string = this.attackSequence[0];
+        let attackSequence: STATUS_ATTACK = this.attackSequence[0];
         if (
             currentAttackSequenceIndex !== -1 &&
             (currentAttackSequenceIndex + 1) < this.attackSequence.length
         ) {
             attackSequence = this.attackSequence[currentAttackSequenceIndex + 1];
         }
-        if (!this.attackSequence.includes(this.sprite.anims.getName())) {
+        if (!(this.attackSequence as string[]).includes(this.sprite.anims.getName())) {
             let velocity: number = this.walkingVelocity / 2;
             if (this.directionX === Direction.Left) {
                 velocity *= -1;
