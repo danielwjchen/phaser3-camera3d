@@ -125,6 +125,6 @@ export class MainScene extends Phaser.Scene {
             Left: this?.leftKey?.isDown || false,
             Right: this?.rightKey?.isDown || false,
         };
-        this.character.go(command, this?.runKey?.isDown);
+        this.character.go(command, this?.runKey?.isDown || false);
     }
 }

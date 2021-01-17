@@ -321,6 +321,11 @@ export class Object3D {
         this.x = x;
         this.y = y;
         this.z = z;
+        if ((this.y - this.sprite.height / 2) > 0) {
+            this.velocity.y -= 1.3;
+        } else {
+            this.velocity.y = 0;
+        }
 
         this.setSpriteDimensions();
         this.setSpritePosition();

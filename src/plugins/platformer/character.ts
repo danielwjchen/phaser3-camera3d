@@ -365,6 +365,12 @@ export class Character implements ICollider {
             if (!this.isKnockedOut()) {
                 this.stand();
             }
+            if (
+                this.currentStatus === 'jump' 
+                && this.object3d.y ===  this.sprite.height / 2
+            ) {
+                this.stand();
+            }
         }
 
     }
