@@ -71,9 +71,16 @@ export class MainScene extends Phaser.Scene {
         }
         let world: Platform = this.platformer.createPlatform(0, 0, 0, 6, 16);
         let character: Character = this.platformer.createCharacter(
-            40, 0, world.centerZ,
+            1, 0, world.centerZ,
             this.spriteName
         );
+        // this.platformer.createCircile(1, 1, world.centerZ);
+        // this.platformer.createCircile(1, 0 ,0);
+        // this.platformer.createCircile(0, 0 ,0);
+        // this.platformer.createCircile(0, 1, 0);
+        // this.platformer.createCircile(0, 0, 1);
+        // this.platformer.createCircile(1, 0, 1);
+        // this.platformer.createCircile(1, 1, 1);
         this.leftKey = 
             this.input.keyboard.addKey('LEFT');
         this.rightKey = 

@@ -1,6 +1,7 @@
 import * as  Phaser from 'phaser';
 import { Platform } from './platform';
-import { getProjection, Object3D, Projection } from './object3d';
+import { getProjection, Vector, Object3D, Projection } from './object3d';
+import { ICollider } from './collider';
 
 export enum Direction {
     Up,
@@ -29,7 +30,7 @@ export type Command = {[key in keyof typeof Direction]: boolean};
 
 export const GAME_OBJECT_TYPE_CHARACTER: string = 'character';
 
-export class Character {
+export class Character implements ICollider {
 
     private currentStatus: string = '';
     private directionX: Direction.Right | Direction.Left;
@@ -50,6 +51,7 @@ export class Character {
 
     public object3d: Object3D;
     public sprite: Phaser.GameObjects.Sprite;
+    public isEnabled: boolean = true;
 
     constructor(
         platform: Platform,
@@ -62,14 +64,14 @@ export class Character {
         walkingVelocity: number=8,
         jumpingVelocity: number=16 
     ) {
-        let projection: Projection = getProjection(x, y, z);
+        let projection: Projection = getProjection(x, y + 40, z);
         this.sprite = new Phaser.GameObjects.Sprite(
             platform.scene, 
             platform.originCavansX + projection.x, 
             platform.originCavansY + projection.y, 
             texture, frame
         );
-        this.object3d = new Object3D(platform, x, y, z, this.sprite);
+        this.object3d = new Object3D(platform, x, y + 40, z, this.sprite);
         this.object3d.setSpritePosition();
         this.platform = platform;
         this.directionX = Direction.Right;
@@ -240,18 +242,18 @@ export class Character {
         });
     }
 
-    public update() {
-        if (this.currentStatus === 'jump') {
-            // if (this.object3d.velocity.y === 0) {
-            //     this.object3d.velocity.y = 0;
-            //     this.stand();
-            // }
-            return;
-        }
-        if (this.attackSequence.includes(this.currentStatus)) {
-            return;
-        }
-    }
+    // public update() {
+    //     if (this.currentStatus === 'jump') {
+    //         // if (this.object3d.velocity.y === 0) {
+    //         //     this.object3d.velocity.y = 0;
+    //         //     this.stand();
+    //         // }
+    //         return;
+    //     }
+    //     if (this.attackSequence.includes(this.currentStatus)) {
+    //         return;
+    //     }
+    // }
 
     public attack() {
         let currentAttackSequenceIndex: number = 
@@ -355,6 +357,16 @@ export class Character {
         this.object3d.stop();
         this.currentStatus = 'guard';
         this.sprite.anims.play(this.currentStatus);
+    }
+
+    public onCollide(force: Vector): void {
+        if (force.x === 0 && force.y === 0 && force.z === 0) {
+            this.object3d.stop();
+            if (!this.isKnockedOut()) {
+                this.stand();
+            }
+        }
+
     }
 
 }

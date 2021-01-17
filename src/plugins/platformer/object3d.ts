@@ -44,6 +44,15 @@ export class Vector {
 
 }
 
+export class CuboidBounds {
+    public maxX: number = 0;
+    public maxY: number = 0;
+    public maxZ: number = 0;
+    public minX: number = 0;
+    public minY: number = 0;
+    public minZ: number = 0;
+}
+
 export function getProjection(x: number, y: number, z: number): Projection {
     return {
         x: x + z / SQRT_2,
@@ -54,14 +63,18 @@ export function getProjection(x: number, y: number, z: number): Projection {
 export class Object3D {
 
     public platform: Platform;
-    public sprite: Phaser.GameObjects.Sprite;
     public velocity: Vector;
     public coordinatesText: Phaser.GameObjects.Text | undefined;
+    public sprite: Phaser.GameObjects.Sprite;
 
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
     private graphics: Phaser.GameObjects.Graphics | undefined;
+    private polygons: Phaser.Geom.Polygon[] = [];
+    private halfLength: number = 0;
+    private halfWidth: number = 0;
+    private halfHeight: number = 0;
 
     set x(value: number) {
         this._x = value;
@@ -95,14 +108,23 @@ export class Object3D {
     ) {
         this.platform = platform;
         this.sprite = sprite;
+        this.setSpriteDimensions();
         this.velocity = new Vector();
         this.x = x;
         this.y = y;
         this.z = z;
         let coordinatesPosition = this.getCoordinatesTextPosition();
         this.coordinatesText = this.sprite.scene.add.text(
-            coordinatesPosition.x, coordinatesPosition.y, this.getCoordinatesText(), { color: '#00ff00' }
+            coordinatesPosition.x, coordinatesPosition.y, 
+            this.getCoordinatesText(), { color: '#00ff00' }
         ).setDepth(this.z);
+        this.setColliderBox();
+    }
+
+    private setSpriteDimensions() {
+        this.halfLength = this.sprite.width / 4;
+        this.halfWidth = this.sprite.width / 4;
+        this.halfHeight = this.sprite.height / 2;
     }
 
     private getCoordinatesTextPosition(): Projection {
@@ -125,33 +147,28 @@ export class Object3D {
     }
 
     private getPolygonBottom(): Phaser.Geom.Polygon {
-
-        let halfLength: number = this.sprite.width / 3;
-        let halfWidth: number = this.sprite.width / 4;
-        let halfHeight: number = this.sprite.height / 2;
-
         let projection0: Projection = getProjection(
-            -1 * halfLength, 
-            1 * halfHeight,
-            -1 * halfWidth
+            -1 * this.halfLength, 
+            1 * this.halfHeight,
+            -1 * this.halfWidth
         );
 
         let projection1: Projection = getProjection(
-            -1 * halfLength, 
-            1 * halfHeight,
-            halfWidth
+            -1 * this.halfLength, 
+            1 * this.halfHeight,
+            this.halfWidth
         );
 
         let projection2: Projection = getProjection(
-            halfLength, 
-            1 * halfHeight,
-            halfWidth
+            this.halfLength, 
+            1 * this.halfHeight,
+            this.halfWidth
         );
 
         let projection3: Projection = getProjection(
-            halfLength, 
-            1 * halfHeight,
-            -1 * halfWidth
+            this.halfLength, 
+            1 * this.halfHeight,
+            -1 * this.halfWidth
         );
 
         return new Phaser.Geom.Polygon([
@@ -164,33 +181,28 @@ export class Object3D {
     }
 
     private getPolygonTop(): Phaser.Geom.Polygon {
-
-        let halfLength: number = this.sprite.width / 3;
-        let halfWidth: number = this.sprite.width / 4;
-        let halfHeight: number = this.sprite.height / 2;
-
         let projection0: Projection = getProjection(
-            -1 * halfLength, 
-            -1 * halfHeight,
-            -1 * halfWidth
+            -1 * this.halfLength, 
+            -1 * this.halfHeight,
+            -1 * this.halfWidth
         );
 
         let projection1: Projection = getProjection(
-            -1 * halfLength, 
-            -1 * halfHeight,
-            halfWidth
+            -1 * this.halfLength, 
+            -1 * this.halfHeight,
+            this.halfWidth
         );
 
         let projection2: Projection = getProjection(
-            halfLength, 
-            -1 * halfHeight,
-            halfWidth
+            this.halfLength, 
+            -1 * this.halfHeight,
+            this.halfWidth
         );
 
         let projection3: Projection = getProjection(
-            halfLength, 
-            -1 * halfHeight,
-            -1 * halfWidth
+            this.halfLength, 
+            -1 * this.halfHeight,
+            -1 * this.halfWidth
         );
 
         return new Phaser.Geom.Polygon([
@@ -202,7 +214,25 @@ export class Object3D {
 
     }
 
-    private drawCollisionBox() {
+    private setColliderBox() {
+        this.polygons = [
+            this.getPolygonTop(),
+            this.getPolygonBottom(),
+        ];
+    }
+
+    public getCuboidBounds(x: number, y: number, z: number): CuboidBounds {
+        let result = new CuboidBounds();
+        result.minX = x - this.halfLength;
+        result.minY = y - this.halfHeight;
+        result.minZ = z - this.halfWidth;
+        result.maxX = x + this.halfLength;
+        result.maxY = y + this.halfHeight;
+        result.maxZ = z + this.halfWidth;
+        return result;
+    }
+
+    public drawCollisionBox() {
         let projection: Projection = getProjection(this.x, this.y, this.z);
         if (!this.graphics) {
             this.graphics = this.sprite.scene.add.graphics({ 
@@ -227,19 +257,16 @@ export class Object3D {
         this.graphics.strokeCircleShape(center);
 
 
-        let polygons: Phaser.Geom.Polygon[] = [
-            this.getPolygonTop(),
-            this.getPolygonBottom(),
-        ];
-        polygons[0].points.forEach((point, index) => {
+        this.polygons[0].points.forEach((point, index) => {
             let line: Phaser.Geom.Line = new Phaser.Geom.Line(
                 point.x, point.y,
-                polygons[1].points[index].x, polygons[1].points[index].y 
+                this.polygons[1].points[index].x, 
+                this.polygons[1].points[index].y 
             );
             
             this.graphics?.strokeLineShape(line);
         });
-        polygons.forEach(polygon => {
+        this.polygons.forEach(polygon => {
             this.graphics?.beginPath();
 
             this.graphics?.moveTo(
@@ -255,8 +282,15 @@ export class Object3D {
             this.graphics?.closePath();
             this.graphics?.strokePath();
         })
+    }
 
-
+    public drawCoordinatesText() {
+        let coordinatesPosition = this.getCoordinatesTextPosition();
+        this.coordinatesText?.setPosition(
+            this.platform.originCavansX + coordinatesPosition.x, 
+            this.platform.originCavansY + coordinatesPosition.y
+        );
+        this.coordinatesText?.setText(this.getCoordinatesText());
     }
 
     public setSpritePosition() {
@@ -274,19 +308,23 @@ export class Object3D {
         this.velocity.y = y;
         this.velocity.z = z;
     }
+    
+    public getNextPosition(): Vector {
+        let result: Vector = new Vector();
+        result.x = this.x + this.velocity.x;
+        result.y = this.y + this.velocity.y;
+        result.z = this.z + this.velocity.z;
+        return result;
+    }
 
-    public update() {
-        this.x += this.velocity.x;
-        this.y += this.velocity.y;
-        this.z += this.velocity.z;
+    public update(x: number, y: number, z: number) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
+
+        this.setSpriteDimensions();
         this.setSpritePosition();
-        let coordinatesPosition = this.getCoordinatesTextPosition();
-        this.coordinatesText?.setPosition(
-            this.platform.originCavansX + coordinatesPosition.x, 
-            this.platform.originCavansY + coordinatesPosition.y
-        );
-        this.coordinatesText?.setText(this.getCoordinatesText());
-        this.drawCollisionBox();
+        this.setColliderBox();
     }
 
     public stop() {
