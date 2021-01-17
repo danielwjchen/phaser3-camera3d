@@ -72,15 +72,15 @@ export class Character implements ICollider {
         jumpingVelocity: number=16 
     ) {
         let projection: Projection = getProjection(x, y + 40, z);
+        this.platform = platform;
         this.sprite = new Phaser.GameObjects.Sprite(
-            platform.scene, 
+            this.platform.scene, 
             platform.originCavansX + projection.x, 
             platform.originCavansY + projection.y, 
             texture, frame
         );
         this.object3d = new Object3D(platform, x, y + 40, z, this.sprite);
         this.object3d.setSpritePosition();
-        this.platform = platform;
         this.directionX = Direction.Right;
         this.runningVelocity = runningVelocity;
         this.walkingVelocity = walkingVelocity;
