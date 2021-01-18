@@ -25,8 +25,8 @@ export class AppComponent implements AfterViewInit, OnDestroy {
     let gameConfig: Phaser.Types.Core.GameConfig = {
       parent: this.canvasContainer.nativeElement,
       type: Phaser.AUTO,
-      width: 800,
-      height: 600,
+      width: 1280,
+      height: 720,
       backgroundColor: '#18216D',
       scene: new MainScene(),
       plugins: {
