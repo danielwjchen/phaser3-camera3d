@@ -1,7 +1,6 @@
 import * as  Phaser from 'phaser';
 import { Platform } from './platform';
 import { getProjection, Vector, Object3D, Projection } from './object3d';
-import { ICollider } from './collider';
 
 export enum Direction {
     Up,
@@ -37,7 +36,7 @@ export type status = 'stand' | 'jump' | 'guard' | 'guard_attacked' | 'attack' |
 
 export const GAME_OBJECT_TYPE_CHARACTER: string = 'character';
 
-export class Character implements ICollider {
+export class Character {
 
     private currentStatus: status = 'stand';
     private directionX: Direction.Right | Direction.Left;
@@ -90,6 +89,9 @@ export class Character implements ICollider {
         // this.physicsBody = this.sprite.body as Phaser.Physics.Arcade.Body;
         // this.physicsBody.setCollideWorldBounds(true);
         // this.physicsBody.allowGravity = false;
+        this.object3d.collisionCallback = (force: Vector) => {
+            this.onCollide(force);
+        };
         this.stand();
     }
 

@@ -1,4 +1,4 @@
-import { GRAVITY, SQRT_2, SQRT_2_DIV_2 } from './constants';
+import { GRAVITY, SQRT_2 } from './constants';
 import { Platform } from './platform';
 
 const COLOR_GRID: number = 0x00aa00;
@@ -66,6 +66,7 @@ export class Object3D {
     public velocity: Vector;
     public coordinatesText: Phaser.GameObjects.Text | undefined;
     public sprite: Phaser.GameObjects.Sprite;
+    public collisionCallback: ((force: Vector) => void) | undefined;
 
     private _x: number = 0;
     private _y: number = 0;
@@ -341,6 +342,13 @@ export class Object3D {
 
     public destroy() {
         this.graphics?.destroy();
+    }
+
+    public onCollision(force: Vector) {
+        if (!this.collisionCallback) {
+            return;
+        }
+        this.collisionCallback(force);
     }
 
 }

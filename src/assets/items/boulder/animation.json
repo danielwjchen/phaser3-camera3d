@@ -1,0 +1,76 @@
+{
+    "anims": [
+        {
+            "key": "idle",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_00",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
+            "key": "roll",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_00",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_01",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_02",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_03",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_04",
+                    "duration": 0,
+                    "visible": true
+                },
+                {
+                    "key": "item_atlas",
+                    "frame": "roll_05",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 8,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeat": -1,
+            "repeatDelay": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        }
+    ]
+}

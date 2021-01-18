@@ -2,6 +2,7 @@ import * as  Phaser from 'phaser';
 import { 
     Character, PlatformerPlugin, Command, Direction, Platform 
 } from 'src/plugins/platformer';
+import { Item } from 'src/plugins/platformer/item';
 
 const CAMERA_ZOOM_STEP = 0.5;
 
@@ -57,10 +58,18 @@ export class MainScene extends Phaser.Scene {
             this.spriteName, 
             'assets/characters/template/animation.json',
         );
+        this.load.animation(
+            'boulder', 
+            'assets/items/boulder/animation.json',
+        );
         this.load.atlas(
             'atlas', 
             'assets/characters/template/atlas.png',
             'assets/characters/template/atlas.json')
+        this.load.atlas(
+            'item_atlas', 
+            'assets/items/boulder/atlas.png',
+            'assets/items/boulder/atlas.json')
     }
 
     create(): void {
@@ -74,6 +83,7 @@ export class MainScene extends Phaser.Scene {
             1, 0, world.centerZ,
             this.spriteName
         );
+        let item: Item = this.platformer.createItem(3, 5, 2, 'boulder');
         // this.platformer.createCircile(1, 1, world.centerZ);
         // this.platformer.createCircile(1, 0 ,0);
         // this.platformer.createCircile(0, 0 ,0);

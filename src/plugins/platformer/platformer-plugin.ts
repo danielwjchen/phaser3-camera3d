@@ -1,5 +1,6 @@
 import { Character, GAME_OBJECT_TYPE_CHARACTER } from "./character";
-import { CuboidBounds, getProjection, Projection, Vector } from "./object3d";
+import { Item } from "./item";
+import { CuboidBounds, getProjection, Object3D, Projection, Vector } from "./object3d";
 import { Platform } from "./platform";
 
 export const PLUGIN_PLATFORMER: string = 'PlatformerPlugin';
@@ -29,6 +30,8 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
 
     public platform: Platform | undefined;
     public characters: Character[] = [];
+    public items: Item[] = [];
+    public object3ds: Object3D[] = [];
     private graphics: Phaser.GameObjects.Graphics[] = [];
 
     constructor(
@@ -42,11 +45,11 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         let emptyCollideVector = new Vector(0, 0, 0);
         this.scene.events.once(Phaser.Scenes.Events.READY, () => {
             this.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
-                this.characters.forEach(character => {
+                this.object3ds.forEach(object3d => {
                     let nextPosition: Vector = 
-                        character.object3d.getNextPosition();
+                        object3d.getNextPosition();
                     let nextPositionCuboidBounds: CuboidBounds =
-                        character.object3d.getCuboidBounds(
+                        object3d.getCuboidBounds(
                             nextPosition.x, nextPosition.y, nextPosition.z
                         );
                     let isOutOfBound: boolean = false;
@@ -64,13 +67,13 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                         nextPosition.z += boundsOverlap.z;
                     }
                     if (isOutOfBound) {
-                        character.onCollide(emptyCollideVector);
+                        object3d.onCollision(emptyCollideVector);
                     }
-                    character.object3d.update(
+                    object3d.update(
                         nextPosition.x, nextPosition.y, nextPosition.z
                     );
-                    character.object3d.drawCollisionBox();
-                    character.object3d.drawCoordinatesText();
+                    object3d.drawCollisionBox();
+                    object3d.drawCoordinatesText();
                 });
             });
         });
@@ -95,9 +98,31 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
             texture, frame, 
             runningVelocity, walkingVelocity, jumpingVelocity
         );
+        this.object3ds.push(characater.object3d);
         this.characters.push(characater);
         this.scene.sys.displayList.add(characater.sprite);
         return characater;
+    }
+
+    public createItem(
+        x: number, y:number, z:number,
+        texture: string | Phaser.Textures.Texture, 
+        frame?: string | number
+    ): Item {
+        if (!this.platform) {
+            throw new Error('Platform is not created');
+        }
+        let item: Item = new Item(
+            this.platform, 
+            x * this.platform.tileSizeInPixel, 
+            y * this.platform.tileSizeInPixel, 
+            z * this.platform.tileSizeInPixel,
+            texture, frame, 
+        );
+        this.object3ds.push(item.object3d);
+        this.items.push(item);
+        this.scene.sys.displayList.add(item.sprite);
+        return item;
     }
 
     public createPlatform(
