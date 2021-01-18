@@ -249,19 +249,6 @@ export class Character implements ICollider {
         });
     }
 
-    // public update() {
-    //     if (this.currentStatus === 'jump') {
-    //         // if (this.object3d.velocity.y === 0) {
-    //         //     this.object3d.velocity.y = 0;
-    //         //     this.stand();
-    //         // }
-    //         return;
-    //     }
-    //     if (this.attackSequence.includes(this.currentStatus)) {
-    //         return;
-    //     }
-    // }
-
     public attack() {
         let currentAttackSequenceIndex: number = 
             (this.attackSequence as string[]).indexOf(this.currentStatus);
