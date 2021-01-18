@@ -29,12 +29,6 @@ export class AppComponent implements AfterViewInit, OnDestroy {
       height: 600,
       backgroundColor: '#18216D',
       scene: new MainScene(),
-      physics: {
-        default: 'arcade',
-        arcade: {
-            gravity: { y: 200 }
-        }
-      },
       plugins: {
           scene: [
             { 
