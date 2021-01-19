@@ -17,7 +17,7 @@ export class Item {
         texture: string | Phaser.Textures.Texture, 
         frame?: string | number,
     ) {
-        let projection: Projection = getProjection(x, y + 40, z);
+        let projection: Projection = getProjection(x, y + 30, z);
         this.platform = platform;
         this.sprite = new Phaser.GameObjects.Sprite(
             this.platform.scene, 
@@ -25,7 +25,7 @@ export class Item {
             platform.originCavansY + projection.y, 
             texture, frame
         );
-        this.object3d = new Object3D(platform, x, y + 40, z, this.sprite);
+        this.object3d = new Object3D(platform, x, y + 30, z, this.sprite);
         this.object3d.setSpritePosition();
         this.sprite.anims.play('idle')
     }

@@ -1,26 +1,29 @@
 import { Character, GAME_OBJECT_TYPE_CHARACTER } from "./character";
+import { Collider, CollisionMapping } from "./collider";
 import { Item } from "./item";
 import { CuboidBounds, getProjection, Object3D, Projection, Vector } from "./object3d";
 import { Platform } from "./platform";
 
 export const PLUGIN_PLATFORMER: string = 'PlatformerPlugin';
 
-function getBoundsOverlap(platform: Platform, cuboidBounds: CuboidBounds): Vector {
+function getBoundsOverlapWithWorld(
+    world: Platform, cuboidBounds: CuboidBounds
+): Vector {
     let result: Vector = new Vector();
-    if (cuboidBounds.minX < platform.x) {
-        result.x = platform.x - cuboidBounds.minX;
+    if (cuboidBounds.minX < world.x) {
+        result.x = world.x - cuboidBounds.minX;
     } 
-    if (cuboidBounds.maxX > platform.maxX) {
-        result.x = platform.maxX - cuboidBounds.maxX;
+    if (cuboidBounds.maxX > world.maxX) {
+        result.x = world.maxX - cuboidBounds.maxX;
     }
-    if (cuboidBounds.minZ < platform.z) {
-        result.z = platform.z - cuboidBounds.minZ;
+    if (cuboidBounds.minZ < world.z) {
+        result.z = world.z - cuboidBounds.minZ;
     } 
-    if (cuboidBounds.maxZ > platform.maxZ) {
-        result.z = platform.maxZ - cuboidBounds.maxZ;
+    if (cuboidBounds.maxZ > world.maxZ) {
+        result.z = world.maxZ - cuboidBounds.maxZ;
     }
-    if (cuboidBounds.minY < platform.y) {
-        result.y = platform.y - cuboidBounds.minY;
+    if (cuboidBounds.minY < world.y) {
+        result.y = world.y - cuboidBounds.minY;
     } 
 
     return result;
@@ -33,6 +36,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
     public items: Item[] = [];
     public object3ds: Object3D[] = [];
     private graphics: Phaser.GameObjects.Graphics[] = [];
+    private collider: Collider = new Collider();
 
     constructor(
         scene: Phaser.Scene,
@@ -54,7 +58,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                         );
                     let isOutOfBound: boolean = false;
                     if (this.platform) {
-                        let boundsOverlap: Vector = getBoundsOverlap(
+                        let boundsOverlap: Vector = getBoundsOverlapWithWorld(
                             this.platform, nextPositionCuboidBounds
                         );
                         isOutOfBound = (
@@ -66,6 +70,8 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                         nextPosition.y += boundsOverlap.y;
                         nextPosition.z += boundsOverlap.z;
                     }
+                    let collisionMapping: CollisionMapping = 
+                        this.collider.getCollisionMapping(this.object3ds);
                     if (isOutOfBound) {
                         object3d.onCollision(emptyCollideVector);
                     }

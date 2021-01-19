@@ -1,5 +1,6 @@
 import { GRAVITY, SQRT_2 } from './constants';
 import { Platform } from './platform';
+import { v4 as uuidv4 } from 'uuid';
 
 const COLOR_GRID: number = 0x00aa00;
 
@@ -68,6 +69,7 @@ export class Object3D {
     public sprite: Phaser.GameObjects.Sprite;
     public collisionCallback: ((force: Vector) => void) | undefined;
 
+    private _uuid: string;
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
@@ -76,6 +78,10 @@ export class Object3D {
     private halfLength: number = 0;
     private halfWidth: number = 0;
     private halfHeight: number = 0;
+
+    get uuid(): string {
+        return this._uuid;
+    }
 
     set x(value: number) {
         this._x = value;
@@ -107,6 +113,7 @@ export class Object3D {
         x: number, y: number, z: number, 
         sprite: Phaser.GameObjects.Sprite,
     ) {
+        this._uuid = uuidv4();
         this.platform = platform;
         this.sprite = sprite;
         this.setSpriteDimensions();
