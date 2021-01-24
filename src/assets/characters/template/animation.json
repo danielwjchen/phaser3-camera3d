@@ -1031,7 +1031,7 @@
                     "visible": true
                 }
             ],
-            "frameRate": 8,
+            "frameRate": 16,
             "duration": 1,
             "skipMissedFrames": true,
             "deplay": 0,
