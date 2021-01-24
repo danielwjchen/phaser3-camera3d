@@ -1,5 +1,5 @@
 import { Character, GAME_OBJECT_TYPE_CHARACTER } from "./character";
-import { Collider, CollisionMapping } from "./collider";
+import { Collider, CollisionItem } from "./collider";
 import { Item } from "./item";
 import { CuboidBounds, getProjection, Object3D, Projection, Vector } from "./object3d";
 import { Platform } from "./platform";
@@ -70,17 +70,29 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                         nextPosition.y += boundsOverlap.y;
                         nextPosition.z += boundsOverlap.z;
                     }
-                    let collisionMapping: CollisionMapping = 
-                        this.collider.getCollisionMapping(this.object3ds);
                     if (isOutOfBound) {
                         object3d.onCollision(emptyCollideVector);
                     }
                     object3d.update(
                         nextPosition.x, nextPosition.y, nextPosition.z
                     );
+                });
+                let collisionItems: CollisionItem[] = 
+                    this.collider.getCollisionMapping(this.object3ds);
+                collisionItems.forEach(item => {
+                    if (item.nextPosition.equals(item.object3d.x, item.object3d.y, item.object3d.z)) {
+                        return;
+                    }
+                    item.object3d.update(
+                        item.nextPosition.x,
+                        item.nextPosition.y,
+                        item.nextPosition.z,
+                    );
+                });
+                this.object3ds.forEach(object3d => {
                     object3d.drawCollisionBox();
                     object3d.drawCoordinatesText();
-                });
+                })
             });
         });
     }

@@ -43,6 +43,18 @@ export class Vector {
         return this._z;
     }
 
+    copy(): Vector {
+        return new Vector(this.x, this.y, this.z);
+    }
+
+    equals(x: number, y: number, z: number) : boolean {
+        return this._x === x && this._y === y && this._z === z;
+    }
+
+    getDifference(x: number, y: number, z: number) : Vector {
+        return new Vector(this.x - x, this.y - y, this.z - z);
+    }
+
 }
 
 export class CuboidBounds {
@@ -227,6 +239,10 @@ export class Object3D {
             this.getPolygonTop(),
             this.getPolygonBottom(),
         ];
+    }
+
+    public getCurrentPosition(): Vector {
+        return new Vector(this.x, this.y, this.z);
     }
 
     public getCuboidBounds(x: number, y: number, z: number): CuboidBounds {
