@@ -83,7 +83,11 @@ export class MainScene extends Phaser.Scene {
             1, 0, world.centerZ,
             this.spriteName
         );
-        let item: Item = this.platformer.createItem(3, 5, 2, 'boulder');
+        let items: Item[] = [
+            this.platformer.createItem(3, 5, 2, 'boulder'),
+            this.platformer.createItem(4, 6, 8, 'boulder'),
+            this.platformer.createItem(8, 8, 4, 'boulder'),
+        ]
         // this.platformer.createCircile(1, 1, world.centerZ);
         // this.platformer.createCircile(1, 0 ,0);
         // this.platformer.createCircile(0, 0 ,0);
