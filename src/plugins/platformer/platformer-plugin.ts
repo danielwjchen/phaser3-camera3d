@@ -80,7 +80,10 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                 let collisionItems: CollisionItem[] = 
                     this.collider.getCollisionMapping(this.object3ds);
                 collisionItems.forEach(item => {
-                    if (item.nextPosition.equals(item.object3d.x, item.object3d.y, item.object3d.z)) {
+                    if (item.nextPosition.equals(
+                        item.currentPosition.x, item.currentPosition.y, 
+                        item.currentPosition.z
+                    )) {
                         return;
                     }
                     item.object3d.update(

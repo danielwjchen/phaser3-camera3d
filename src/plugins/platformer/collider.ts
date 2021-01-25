@@ -3,6 +3,7 @@ import { CuboidBounds, Object3D, Vector } from "./object3d";
 export type CollisionItem = {
     object3d: Object3D,
     overlap: Vector,
+    currentPosition: Vector,
     nextPosition: Vector,
 };
 
@@ -26,7 +27,9 @@ function getBoundsOverlap(a: CuboidBounds, b: CuboidBounds): Vector {
     } else if (a.maxZ >= b.minZ) {
         result.z = a.maxZ - (b.minZ - 1);
     } 
-    if (a.minY >= b.maxY) {
+    if (a.minY <= b.maxY && a.maxY > b.maxY) {
+        result.y = a.minY - (b.maxY + 1);
+    } else if (a.minY >= b.maxY) {
         result.y = a.minY - (b.maxY + 1);
     } 
 
@@ -41,7 +44,7 @@ function getPositionAfterCollision(
     );
     let result: Vector = nextPosition.copy();
     if (diff.y !== 0) {
-        result.y -= overlap.y;
+        result.y += overlap.y;
         return result;
     }
 
@@ -70,14 +73,19 @@ export class Collider {
             if (result[a.uuid]) {
                 return;
             }
-            let nextPositionA: Vector = 
-                a.getNextPosition();
+            let currentPositionA: Vector = a.getCurrentPosition();
+            let nextPositionA: Vector = a.getNextPosition();
             let cuboidBoundsA: CuboidBounds = a.getCuboidBounds(
                 nextPositionA.x, nextPositionA.y, nextPositionA.z
             );
             object3dList.slice(index + 1).forEach(b => {
-                let nextPositionB: Vector = 
-                    b.getNextPosition();
+                let collisionKeyA: string = a.uuid + b.uuid;
+                let collisionKeyB: string = b.uuid + a.uuid;
+                if (collisionKeyA in result || collisionKeyB in result) {
+                    return;
+                }
+                let currentPositionB: Vector = b.getCurrentPosition();
+                let nextPositionB: Vector = b.getNextPosition();
                 let cuboidBoundsB: CuboidBounds = b.getCuboidBounds(
                     nextPositionB.x, nextPositionB.y, nextPositionB.z
                 );
@@ -88,21 +96,23 @@ export class Collider {
                 let overlapA: Vector = getBoundsOverlap(
                     cuboidBoundsA, cuboidBoundsB
                 );
-                result[a.uuid] = {
+                result[collisionKeyA] = {
                     object3d: a,
                     overlap: overlapA,
+                    currentPosition: currentPositionA,
                     nextPosition: getPositionAfterCollision(
-                        a.getCurrentPosition(), nextPositionA, overlapA
+                        currentPositionA, nextPositionA, overlapA
                     ),
                 };
                 let overlapB: Vector = getBoundsOverlap(
                     cuboidBoundsB, cuboidBoundsA
                 );
-                result[b.uuid] = {
+                result[collisionKeyB] = {
                     object3d: b,
                     overlap: overlapB,
+                    currentPosition: currentPositionB,
                     nextPosition: getPositionAfterCollision(
-                        b.getCurrentPosition(), nextPositionB, overlapB
+                        currentPositionB, nextPositionB, overlapB
                     ),
                 };
             });
