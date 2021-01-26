@@ -28,9 +28,9 @@ function getBoundsOverlap(a: CuboidBounds, b: CuboidBounds): Vector {
         result.z = a.maxZ - (b.minZ - 1);
     } 
     if (a.minY <= b.maxY && a.maxY > b.maxY) {
-        result.y = a.minY - (b.maxY + 1);
-    } else if (a.minY >= b.maxY) {
-        result.y = a.minY - (b.maxY + 1);
+        result.y = (a.minY - (b.maxY + 1)) * -1;
+    } else if (a.maxY >= b.minY) {
+        result.y = a.maxY - (b.minY - 1);
     } 
 
     return result;
@@ -78,7 +78,7 @@ export class Collider {
             let cuboidBoundsA: CuboidBounds = a.getCuboidBounds(
                 nextPositionA.x, nextPositionA.y, nextPositionA.z
             );
-            object3dList.slice(index + 1).forEach(b => {
+            object3dList.filter(item => item.uuid !== a.uuid).forEach(b => {
                 let collisionKeyA: string = a.uuid + b.uuid;
                 let collisionKeyB: string = b.uuid + a.uuid;
                 if (collisionKeyA in result || collisionKeyB in result) {
