@@ -49,12 +49,12 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         let emptyCollideVector = new Vector(0, 0, 0);
         this.scene.events.once(Phaser.Scenes.Events.READY, () => {
             this.scene.events.on(Phaser.Scenes.Events.UPDATE, () => {
-                this.object3ds.forEach(object3d => {
-                    let nextPosition: Vector = 
-                        object3d.getNextPosition();
+                let collisionItems: CollisionItem[] = 
+                    this.collider.getCollisionMapping(this.object3ds);
+                collisionItems.forEach(item => {
                     let nextPositionCuboidBounds: CuboidBounds =
-                        object3d.getCuboidBounds(
-                            nextPosition.x, nextPosition.y, nextPosition.z
+                        item.object3d.getCuboidBounds(
+                            item.nextPosition.x, item.nextPosition.y, item.nextPosition.z
                         );
                     let isOutOfBound: boolean = false;
                     if (this.platform) {
@@ -66,25 +66,12 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                             || boundsOverlap.y !== 0 
                             || boundsOverlap.z !== 0
                         );
-                        nextPosition.x += boundsOverlap.x;
-                        nextPosition.y += boundsOverlap.y;
-                        nextPosition.z += boundsOverlap.z;
+                        item.nextPosition.x += boundsOverlap.x;
+                        item.nextPosition.y += boundsOverlap.y;
+                        item.nextPosition.z += boundsOverlap.z;
                     }
                     if (isOutOfBound) {
-                        object3d.onCollision(emptyCollideVector);
-                    }
-                    object3d.update(
-                        nextPosition.x, nextPosition.y, nextPosition.z
-                    );
-                });
-                let collisionItems: CollisionItem[] = 
-                    this.collider.getCollisionMapping(this.object3ds);
-                collisionItems.forEach(item => {
-                    if (item.nextPosition.equals(
-                        item.currentPosition.x, item.currentPosition.y, 
-                        item.currentPosition.z
-                    )) {
-                        return;
+                        item.object3d.onCollision(emptyCollideVector);
                     }
                     item.object3d.update(
                         item.nextPosition.x,

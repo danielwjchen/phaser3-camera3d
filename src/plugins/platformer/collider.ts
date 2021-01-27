@@ -2,7 +2,7 @@ import { CuboidBounds, Object3D, Vector } from "./object3d";
 
 export type CollisionItem = {
     object3d: Object3D,
-    overlap: Vector,
+    overlap: Vector | null,
     currentPosition: Vector,
     nextPosition: Vector,
 };
@@ -90,30 +90,28 @@ export class Collider {
                     nextPositionB.x, nextPositionB.y, nextPositionB.z
                 );
 
-                if (!doesOverlap(cuboidBoundsA, cuboidBoundsB)) {
-                    return;
-                }
-                let overlapA: Vector = getBoundsOverlap(
+                let doesOverlapFlag: boolean = doesOverlap(cuboidBoundsA, cuboidBoundsB);
+                let overlapA: Vector | null = doesOverlapFlag ? getBoundsOverlap(
                     cuboidBoundsA, cuboidBoundsB
-                );
+                ) : null;
                 result[collisionKeyA] = {
                     object3d: a,
                     overlap: overlapA,
                     currentPosition: currentPositionA,
-                    nextPosition: getPositionAfterCollision(
+                    nextPosition: overlapA ? getPositionAfterCollision(
                         currentPositionA, nextPositionA, overlapA
-                    ),
+                    ) : nextPositionA,
                 };
-                let overlapB: Vector = getBoundsOverlap(
+                let overlapB: Vector | null = doesOverlapFlag ? getBoundsOverlap(
                     cuboidBoundsB, cuboidBoundsA
-                );
+                ) : null;
                 result[collisionKeyB] = {
                     object3d: b,
                     overlap: overlapB,
                     currentPosition: currentPositionB,
-                    nextPosition: getPositionAfterCollision(
+                    nextPosition: overlapB ? getPositionAfterCollision(
                         currentPositionB, nextPositionB, overlapB
-                    ),
+                    ) : nextPositionB,
                 };
             });
         });
