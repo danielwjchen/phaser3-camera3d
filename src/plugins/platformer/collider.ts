@@ -1,10 +1,23 @@
 import { CuboidBounds, Object3D, Vector } from "./object3d";
+import { Platform } from "./platform";
 
 export type CollisionItem = {
     object3d: Object3D,
     overlap: Vector | null,
     currentPosition: Vector,
     nextPosition: Vector,
+    movableDirections: {
+        up: boolean,
+        down: boolean,
+        left: boolean,
+        right: boolean,
+        forward: boolean,
+        backward: boolean,
+    }
+};
+
+export type CollisionItemUuidMapping = {
+    [key: string]: CollisionItem,
 };
 
 export type CollisionMapping = {[key: string]: CollisionItem};
@@ -62,33 +75,146 @@ function getPositionAfterCollision(
     return result;
 }
 
+export function getBoundsOverlapWithWorld(
+    world: Platform, cuboidBounds: CuboidBounds
+): Vector {
+    let result: Vector = new Vector();
+    if (cuboidBounds.minX < world.x) {
+        result.x = world.x - cuboidBounds.minX;
+    } 
+    if (cuboidBounds.maxX > world.maxX) {
+        result.x = world.maxX - cuboidBounds.maxX;
+    }
+    if (cuboidBounds.minZ < world.z) {
+        result.z = world.z - cuboidBounds.minZ;
+    } 
+    if (cuboidBounds.maxZ > world.maxZ) {
+        result.z = world.maxZ - cuboidBounds.maxZ;
+    }
+    if (cuboidBounds.minY < world.y) {
+        result.y = world.y - cuboidBounds.minY;
+    } 
+
+    return result;
+}
+
 export class Collider {
 
-    public getCollisionMapping(object3dList: Object3D[]): CollisionItem[] {
+    constructor() {}
+
+    public getCollisionWithWorld(
+        world: Platform, object3dList: Object3D[]
+    ): CollisionItem[] {
+        let result: CollisionItem[] = object3dList.map(object3d => {
+            let nextPosition: Vector = object3d.getNextPosition();
+            let nextPositionCuboidBounds: CuboidBounds =
+                object3d.getCuboidBounds(
+                    nextPosition.x, nextPosition.y, nextPosition.z
+                );
+            let overlapWithWorld: Vector = getBoundsOverlapWithWorld(
+                world, nextPositionCuboidBounds
+            );
+            let item: CollisionItem = {
+                object3d: object3d,
+                overlap: overlapWithWorld,
+                currentPosition: object3d.getCurrentPosition(),
+                nextPosition: nextPosition,
+                movableDirections: {
+                    up: true,
+                    down: true,
+                    left: true,
+                    right: true,
+                    forward: true,
+                    backward: true,
+                },
+
+            }
+            let isOutOfBound: boolean = false;
+            // if (overlapWithWorld.x > ) {
+            //     item.movableDirections.forward 
+
+            // } else if (overlapWithWorld.x < 0) {
+            //     item.movableDirections.backward = false;
+            // }
+            // if (overlapWithWorld.y > 0) {
+
+            // } else if (overlapWithWorld.y < 0) {
+
+            // }
+            // if (overlapWithWorld.z > 0) {
+
+            // } else if (overlapWithWorld.z < 0) {
+
+            // }
+            isOutOfBound = (
+                overlapWithWorld.x !== 0 
+                || overlapWithWorld.y !== 0 
+                || overlapWithWorld.z !== 0
+            );
+            item.nextPosition.x += overlapWithWorld.x;
+            item.nextPosition.y += overlapWithWorld.y;
+            item.nextPosition.z += overlapWithWorld.z;
+
+            // this is where "bounce" logic goes
+            if (isOutOfBound) {
+                item.object3d.onCollision(new Vector(0, 0, 0));
+            }
+            return item;
+        });
+        return result;
+    }
+
+    private getPositionsAndBounds(
+        object3d: Object3D, immovableItemsMap: CollisionItemUuidMapping
+    ): [Vector, Vector, CuboidBounds] {
+        if (immovableItemsMap[object3d.uuid]) {
+            return [
+                immovableItemsMap[object3d.uuid].currentPosition,
+                immovableItemsMap[object3d.uuid].nextPosition,
+                object3d.getCuboidBounds(
+                    immovableItemsMap[object3d.uuid].nextPosition.x,
+                    immovableItemsMap[object3d.uuid].nextPosition.y,
+                    immovableItemsMap[object3d.uuid].nextPosition.z
+                ),
+            ]
+        }
+        let nextPosition: Vector = object3d.getNextPosition();
+        return [
+            object3d.getCurrentPosition(),
+            nextPosition,
+            object3d.getCuboidBounds(
+                nextPosition.x, nextPosition.y, nextPosition.z
+            )
+        ];
+
+    }
+
+    public getCollisionMapping(
+        world: Platform, object3dList: Object3D[]
+    ): CollisionItem[] {
         let result: CollisionMapping = {};
         if (object3dList.length < 2) {
             return [];
         }
-        object3dList.forEach((a, index) => {
-            if (result[a.uuid]) {
-                return;
-            }
-            let currentPositionA: Vector = a.getCurrentPosition();
-            let nextPositionA: Vector = a.getNextPosition();
-            let cuboidBoundsA: CuboidBounds = a.getCuboidBounds(
-                nextPositionA.x, nextPositionA.y, nextPositionA.z
-            );
+        let immovableItemsMap: CollisionItemUuidMapping = {};
+        this.getCollisionWithWorld(world, object3dList).forEach(item => {
+            immovableItemsMap[item.object3d.uuid] = item;
+        });
+
+        object3dList.forEach(a => {
+            let [
+                currentPositionA, nextPositionA, cuboidBoundsA,
+            ] = this.getPositionsAndBounds(a, immovableItemsMap);
+
             object3dList.filter(item => item.uuid !== a.uuid).forEach(b => {
                 let collisionKeyA: string = a.uuid + b.uuid;
                 let collisionKeyB: string = b.uuid + a.uuid;
                 if (collisionKeyA in result || collisionKeyB in result) {
                     return;
                 }
-                let currentPositionB: Vector = b.getCurrentPosition();
-                let nextPositionB: Vector = b.getNextPosition();
-                let cuboidBoundsB: CuboidBounds = b.getCuboidBounds(
-                    nextPositionB.x, nextPositionB.y, nextPositionB.z
-                );
+                let [
+                    currentPositionB, nextPositionB, cuboidBoundsB,
+                ] = this.getPositionsAndBounds(b, immovableItemsMap);
 
                 let doesOverlapFlag: boolean = doesOverlap(cuboidBoundsA, cuboidBoundsB);
                 let overlapA: Vector | null = doesOverlapFlag ? getBoundsOverlap(
@@ -101,6 +227,14 @@ export class Collider {
                     nextPosition: overlapA ? getPositionAfterCollision(
                         currentPositionA, nextPositionA, overlapA
                     ) : nextPositionA,
+                    movableDirections: {
+                        up: true,
+                        down: true,
+                        left: true,
+                        right: true,
+                        forward: true,
+                        backward: true,
+                    },
                 };
                 let overlapB: Vector | null = doesOverlapFlag ? getBoundsOverlap(
                     cuboidBoundsB, cuboidBoundsA
@@ -112,6 +246,14 @@ export class Collider {
                     nextPosition: overlapB ? getPositionAfterCollision(
                         currentPositionB, nextPositionB, overlapB
                     ) : nextPositionB,
+                    movableDirections: {
+                        up: true,
+                        down: true,
+                        left: true,
+                        right: true,
+                        forward: true,
+                        backward: true,
+                    },
                 };
             });
         });
