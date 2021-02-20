@@ -1,19 +1,23 @@
 import { CuboidBounds, Object3D, Vector } from "./object3d";
 import { Platform } from "./platform";
 
+export class MovableDirections {
+    constructor(
+        public up: boolean = true,
+        public down: boolean = true,
+        public left: boolean = true,
+        public right: boolean = true,
+        public forward: boolean = true,
+        public backward: boolean = true,
+    ) {}
+};
+
 export type CollisionItem = {
     object3d: Object3D,
     overlap: Vector | null,
     currentPosition: Vector,
     nextPosition: Vector,
-    movableDirections: {
-        up: boolean,
-        down: boolean,
-        left: boolean,
-        right: boolean,
-        forward: boolean,
-        backward: boolean,
-    }
+    movableDirections: MovableDirections,
 };
 
 export type CollisionItemUuidMapping = {
