@@ -26,7 +26,7 @@ export type CollisionItemUuidMapping = {
 
 export type CollisionMapping = {[key: string]: CollisionItem};
 
-function doesOverlap(a: CuboidBounds, b: CuboidBounds): boolean {
+function isOverlapping(a: CuboidBounds, b: CuboidBounds): boolean {
     return (a.minX <= b.maxX && a.maxX >= b.minX)
         && (a.minY <= b.maxY && a.maxY >= b.minY)
         && (a.minZ <= b.maxZ && a.maxZ >= b.minZ);
@@ -202,7 +202,7 @@ export class Collider {
                     currentPositionB, nextPositionB, cuboidBoundsB,
                 ] = this.getPositionsAndBounds(b, immovableItemsMap);
 
-                let doesOverlapFlag: boolean = doesOverlap(cuboidBoundsA, cuboidBoundsB);
+                let doesOverlapFlag: boolean = isOverlapping(cuboidBoundsA, cuboidBoundsB);
                 let overlapA: Vector | null = doesOverlapFlag ? getBoundsOverlap(
                     cuboidBoundsA, cuboidBoundsB
                 ) : null;
@@ -213,14 +213,7 @@ export class Collider {
                     nextPosition: overlapA ? getPositionAfterCollision(
                         currentPositionA, nextPositionA, overlapA
                     ) : nextPositionA,
-                    movableDirections: {
-                        up: true,
-                        down: true,
-                        left: true,
-                        right: true,
-                        forward: true,
-                        backward: true,
-                    },
+                    movableDirections: new MovableDirections(),
                 };
                 let overlapB: Vector | null = doesOverlapFlag ? getBoundsOverlap(
                     cuboidBoundsB, cuboidBoundsA
@@ -232,14 +225,7 @@ export class Collider {
                     nextPosition: overlapB ? getPositionAfterCollision(
                         currentPositionB, nextPositionB, overlapB
                     ) : nextPositionB,
-                    movableDirections: {
-                        up: true,
-                        down: true,
-                        left: true,
-                        right: true,
-                        forward: true,
-                        backward: true,
-                    },
+                    movableDirections: new MovableDirections(),
                 };
             });
         });
