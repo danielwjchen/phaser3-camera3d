@@ -81,25 +81,31 @@ function getPositionAfterCollision(
 
 export function getBoundsOverlapWithWorld(
     world: Platform, cuboidBounds: CuboidBounds
-): Vector {
-    let result: Vector = new Vector();
+): [Vector, MovableDirections] {
+    let overlap: Vector = new Vector();
+    let movableDirections: MovableDirections = new MovableDirections();
     if (cuboidBounds.minX < world.x) {
-        result.x = world.x - cuboidBounds.minX;
+        movableDirections.backward = false;
+        overlap.x = world.x - cuboidBounds.minX;
     } 
     if (cuboidBounds.maxX > world.maxX) {
-        result.x = world.maxX - cuboidBounds.maxX;
+        movableDirections.forward = false;
+        overlap.x = world.maxX - cuboidBounds.maxX;
     }
     if (cuboidBounds.minZ < world.z) {
-        result.z = world.z - cuboidBounds.minZ;
+        movableDirections.right = false;
+        overlap.z = world.z - cuboidBounds.minZ;
     } 
     if (cuboidBounds.maxZ > world.maxZ) {
-        result.z = world.maxZ - cuboidBounds.maxZ;
+        movableDirections.left = false;
+        overlap.z = world.maxZ - cuboidBounds.maxZ;
     }
     if (cuboidBounds.minY < world.y) {
-        result.y = world.y - cuboidBounds.minY;
+        movableDirections.down = false;
+        overlap.y = world.y - cuboidBounds.minY;
     } 
 
-    return result;
+    return [overlap, movableDirections];
 }
 
 export class Collider {
@@ -115,52 +121,28 @@ export class Collider {
                 object3d.getCuboidBounds(
                     nextPosition.x, nextPosition.y, nextPosition.z
                 );
-            let overlapWithWorld: Vector = getBoundsOverlapWithWorld(
-                world, nextPositionCuboidBounds
-            );
+            let [overlapWithWorld, movableDirections]: [Vector, MovableDirections] = 
+                getBoundsOverlapWithWorld(
+                    world, nextPositionCuboidBounds
+                );
             let item: CollisionItem = {
                 object3d: object3d,
                 overlap: overlapWithWorld,
                 currentPosition: object3d.getCurrentPosition(),
                 nextPosition: nextPosition,
-                movableDirections: {
-                    up: true,
-                    down: true,
-                    left: true,
-                    right: true,
-                    forward: true,
-                    backward: true,
-                },
-
-            }
-            let isOutOfBound: boolean = false;
-            // if (overlapWithWorld.x > ) {
-            //     item.movableDirections.forward 
-
-            // } else if (overlapWithWorld.x < 0) {
-            //     item.movableDirections.backward = false;
-            // }
-            // if (overlapWithWorld.y > 0) {
-
-            // } else if (overlapWithWorld.y < 0) {
-
-            // }
-            // if (overlapWithWorld.z > 0) {
-
-            // } else if (overlapWithWorld.z < 0) {
-
-            // }
-            isOutOfBound = (
-                overlapWithWorld.x !== 0 
-                || overlapWithWorld.y !== 0 
-                || overlapWithWorld.z !== 0
-            );
+                movableDirections: movableDirections,
+            };
             item.nextPosition.x += overlapWithWorld.x;
             item.nextPosition.y += overlapWithWorld.y;
             item.nextPosition.z += overlapWithWorld.z;
 
-            // this is where "bounce" logic goes
+            let isOutOfBound: boolean = (
+                overlapWithWorld.x !== 0 
+                || overlapWithWorld.y !== 0 
+                || overlapWithWorld.z !== 0
+            );
             if (isOutOfBound) {
+                // this is where "bounce" logic goes
                 item.object3d.onCollision(new Vector(0, 0, 0));
             }
             return item;
