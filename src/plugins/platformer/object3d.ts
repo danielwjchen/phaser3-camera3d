@@ -133,7 +133,7 @@ export class Object3D {
         this.x = x;
         this.y = y;
         this.z = z;
-        let coordinatesPosition = this.getCoordinatesTextPosition();
+        const coordinatesPosition = this.getCoordinatesTextPosition();
         this.coordinatesText = this.sprite.scene.add.text(
             coordinatesPosition.x, coordinatesPosition.y, 
             this.getCoordinatesText(), { color: '#00ff00' }
@@ -148,7 +148,7 @@ export class Object3D {
     }
 
     private getCoordinatesTextPosition(): Projection {
-        let projection: Projection = getProjection(
+        const projection: Projection = getProjection(
             this.x, this.y, this.z
         );
         projection.y += this.sprite.height / 2 + COORDINATES_TEXT_OFFSET;
@@ -157,7 +157,7 @@ export class Object3D {
     }
 
     private getCoordinatesText(): string[] {
-        let projection: Projection = getProjection(
+        const projection: Projection = getProjection(
             this.x, this.y, this.z
         );
         return [
@@ -167,25 +167,25 @@ export class Object3D {
     }
 
     private getPolygonBottom(): Phaser.Geom.Polygon {
-        let projection0: Projection = getProjection(
+        const projection0: Projection = getProjection(
             -1 * this.halfLength, 
             1 * this.halfHeight,
             -1 * this.halfWidth
         );
 
-        let projection1: Projection = getProjection(
+        const projection1: Projection = getProjection(
             -1 * this.halfLength, 
             1 * this.halfHeight,
             this.halfWidth
         );
 
-        let projection2: Projection = getProjection(
+        const projection2: Projection = getProjection(
             this.halfLength, 
             1 * this.halfHeight,
             this.halfWidth
         );
 
-        let projection3: Projection = getProjection(
+        const projection3: Projection = getProjection(
             this.halfLength, 
             1 * this.halfHeight,
             -1 * this.halfWidth
@@ -201,25 +201,25 @@ export class Object3D {
     }
 
     private getPolygonTop(): Phaser.Geom.Polygon {
-        let projection0: Projection = getProjection(
+        const projection0: Projection = getProjection(
             -1 * this.halfLength, 
             -1 * this.halfHeight,
             -1 * this.halfWidth
         );
 
-        let projection1: Projection = getProjection(
+        const projection1: Projection = getProjection(
             -1 * this.halfLength, 
             -1 * this.halfHeight,
             this.halfWidth
         );
 
-        let projection2: Projection = getProjection(
+        const projection2: Projection = getProjection(
             this.halfLength, 
             -1 * this.halfHeight,
             this.halfWidth
         );
 
-        let projection3: Projection = getProjection(
+        const projection3: Projection = getProjection(
             this.halfLength, 
             -1 * this.halfHeight,
             -1 * this.halfWidth
@@ -246,7 +246,7 @@ export class Object3D {
     }
 
     public getCuboidBounds(x: number, y: number, z: number): CuboidBounds {
-        let result = new CuboidBounds();
+        const result = new CuboidBounds();
         result.minX = x - this.halfLength;
         result.minY = y - this.halfHeight;
         result.minZ = z - this.halfWidth;
@@ -262,7 +262,7 @@ export class Object3D {
     }
 
     public drawCollisionBox() {
-        let projection: Projection = getProjection(this.x, this.y, this.z);
+        const projection: Projection = getProjection(this.x, this.y, this.z);
         if (!this.graphics) {
             this.graphics = this.sprite.scene.add.graphics({ 
                 x: this.platform.originCavansX + projection.x, 
@@ -280,14 +280,14 @@ export class Object3D {
             this.platform.originCavansX + projection.x, 
             this.platform.originCavansY + projection.y
         );
-        let center: Phaser.Geom.Circle = new Phaser.Geom.Circle(
+        const center: Phaser.Geom.Circle = new Phaser.Geom.Circle(
             0, 0, 2
         );
         this.graphics.strokeCircleShape(center);
 
 
         this.polygons[0].points.forEach((point, index) => {
-            let line: Phaser.Geom.Line = new Phaser.Geom.Line(
+            const line: Phaser.Geom.Line = new Phaser.Geom.Line(
                 point.x, point.y,
                 this.polygons[1].points[index].x, 
                 this.polygons[1].points[index].y 
@@ -314,7 +314,7 @@ export class Object3D {
     }
 
     public drawCoordinatesText() {
-        let coordinatesPosition = this.getCoordinatesTextPosition();
+        const coordinatesPosition = this.getCoordinatesTextPosition();
         this.coordinatesText?.setPosition(
             this.platform.originCavansX + coordinatesPosition.x, 
             this.platform.originCavansY + coordinatesPosition.y
@@ -323,7 +323,7 @@ export class Object3D {
     }
 
     public setSpritePosition() {
-        let projection: Projection = getProjection(
+        const projection: Projection = getProjection(
             this.x, this.y, this.z
         );
         this.sprite.setPosition(
@@ -339,7 +339,7 @@ export class Object3D {
     }
     
     public getNextPosition(): Vector {
-        let result: Vector = new Vector();
+        const result: Vector = new Vector();
         result.x = this.x + this.velocity.x;
         result.y = this.y + this.velocity.y;
         result.z = this.z + this.velocity.z;
