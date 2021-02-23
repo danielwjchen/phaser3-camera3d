@@ -12,13 +12,21 @@ export class MovableDirections {
     ) {}
 };
 
-export type CollisionItem = {
-    object3d: Object3D,
-    overlap: Vector | null,
-    currentPosition: Vector,
-    nextPosition: Vector,
-    movableDirections: MovableDirections,
-};
+export class CollisionItem {
+
+    constructor(
+        public object3d: Object3D,
+        public currentPosition: Vector,
+        public nextPosition: Vector,
+        public movableDirections: MovableDirections,
+    ) {}
+
+    public getNextPositionCuboidBounds(): CuboidBounds {
+        return this.object3d.getCuboidBounds(
+            this.nextPosition.x, this.nextPosition.y, this.nextPosition.z
+        );
+    }
+}
 
 export type CollisionItemUuidMapping = {
     [key: string]: CollisionItem,
@@ -32,23 +40,53 @@ function isOverlapping(a: CuboidBounds, b: CuboidBounds): boolean {
         && (a.minZ <= b.maxZ && a.maxZ >= b.minZ);
 }
 
-function getBoundsOverlap(a: CuboidBounds, b: CuboidBounds): Vector {
-    let result: Vector = new Vector();
-    if (a.minX <= b.maxX && a.maxX > b.maxX) {
-        result.x = a.minX - (b.maxX + 1);
-    } else if (a.maxX >= b.minX) {
-        result.x = a.maxX - (b.minX - 1);
-    } 
-    if (a.minZ <= b.maxZ && a.maxZ > b.maxZ) {
-        result.z = a.minZ - (b.maxZ + 1);
-    } else if (a.maxZ >= b.minZ) {
-        result.z = a.maxZ - (b.minZ - 1);
-    } 
-    if (a.minY <= b.maxY && a.maxY > b.maxY) {
-        result.y = (a.minY - (b.maxY + 1)) * -1;
-    } else if (a.maxY >= b.minY) {
-        result.y = a.maxY - (b.minY - 1);
-    } 
+function getBoundsOverlap(
+    currentPositionA: Vector, cuboidBoundsA: CuboidBounds, 
+    currentPositionB: Vector, cuboidBoundsB: CuboidBounds
+): Vector {
+    const result: Vector = new Vector();
+    if (currentPositionA.x > currentPositionB.x) {
+        if (cuboidBoundsA.minX < cuboidBoundsB.maxX) {
+            result.x = cuboidBoundsB.maxX - cuboidBoundsA.minX + 1;
+        }
+    } else if (currentPositionA.x < currentPositionB.x) {
+        if (cuboidBoundsA.maxX >= cuboidBoundsB.minX) {
+            result.x = cuboidBoundsA.maxX - cuboidBoundsB.minX - 1;
+        }
+    }
+    if (currentPositionA.y > currentPositionB.y) {
+        if (cuboidBoundsA.minY < cuboidBoundsB.maxY) {
+            result.y = cuboidBoundsB.maxY - cuboidBoundsA.minY + 1;
+        }
+    } else if (currentPositionA.y < currentPositionB.y) {
+        if (cuboidBoundsA.maxY >= cuboidBoundsB.minY) {
+            result.y = cuboidBoundsA.maxY - cuboidBoundsB.minY - 1;
+        }
+    }
+    if (currentPositionA.z > currentPositionB.z) {
+        if (cuboidBoundsA.minZ < cuboidBoundsB.maxZ) {
+            result.z = cuboidBoundsB.maxZ - cuboidBoundsA.minZ + 1;
+        }
+    } else if (currentPositionA.z < currentPositionB.z) {
+        if (cuboidBoundsA.maxZ >= cuboidBoundsB.minZ) {
+            result.z = cuboidBoundsA.maxZ - cuboidBoundsB.minZ - 1;
+        }
+    }
+    // if (cuboidBoundsA.minX <= cuboidBoundsB.maxX && cuboidBoundsA.maxX > cuboidBoundsB.maxX) {
+    //     result.x = cuboidBoundsA.minX - (cuboidBoundsB.maxX + 1);
+    // } else if (cuboidBoundsA.maxX >= cuboidBoundsB.minX) {
+    //     result.x = cuboidBoundsA.maxX - (cuboidBoundsB.minX - 1);
+    // } 
+    // if (cuboidBoundsA.minZ <= cuboidBoundsB.maxZ && cuboidBoundsA.maxZ > cuboidBoundsB.maxZ) {
+    //     result.z = cuboidBoundsA.minZ - (cuboidBoundsB.maxZ + 1);
+    // } else if (cuboidBoundsA.maxZ >= cuboidBoundsB.minZ) {
+    //     result.z = cuboidBoundsA.maxZ - (cuboidBoundsB.minZ - 1);
+    // } 
+    // if (cuboidBoundsA.minY <= cuboidBoundsB.maxY && cuboidBoundsA.maxY > cuboidBoundsB.maxY) {
+    //     result.y = (cuboidBoundsA.minY - (cuboidBoundsB.maxY + 1)) * -1;
+    // } else if (cuboidBoundsA.maxY >= cuboidBoundsB.minY) {
+    //     result.y = cuboidBoundsA.maxY - (cuboidBoundsB.minY - 1);
+    // } 
 
     return result;
 }
@@ -56,56 +94,70 @@ function getBoundsOverlap(a: CuboidBounds, b: CuboidBounds): Vector {
 function getPositionAfterCollision(
     currentPosition: Vector, nextPosition: Vector, overlap: Vector
 ): Vector {
-    let diff: Vector = nextPosition.getDifference(
+    const diff: Vector = nextPosition.getDifference(
         currentPosition.x, currentPosition.y, currentPosition.z
     );
-    let result: Vector = nextPosition.copy();
+    const result: Vector = nextPosition.copy();
     if (diff.y !== 0) {
         result.y += overlap.y;
-        return result;
     }
 
     if (diff.z !== 0) {
         result.z -= overlap.z;
-        return result;
     }
 
     if (diff.x !== 0) {
         result.x -= overlap.x;
-        return result;
     }
 
 
     return result;
 }
 
-export function getBoundsOverlapWithWorld(
+export function getMovableDirectionsWithWorld(
     world: Platform, cuboidBounds: CuboidBounds
-): [Vector, MovableDirections] {
-    let overlap: Vector = new Vector();
-    let movableDirections: MovableDirections = new MovableDirections();
-    if (cuboidBounds.minX < world.x) {
+): MovableDirections {
+    const movableDirections: MovableDirections = new MovableDirections();
+    if (cuboidBounds.minX <= world.x) {
         movableDirections.backward = false;
-        overlap.x = world.x - cuboidBounds.minX;
-    } 
-    if (cuboidBounds.maxX > world.maxX) {
+    }
+    if (cuboidBounds.maxX >= world.maxX) {
         movableDirections.forward = false;
-        overlap.x = world.maxX - cuboidBounds.maxX;
     }
     if (cuboidBounds.minZ < world.z) {
         movableDirections.right = false;
+    }
+    if (cuboidBounds.maxZ >= world.maxZ) {
+        movableDirections.left = false;
+    }
+    if (cuboidBounds.minY <= world.y) {
+        movableDirections.down = false;
+    }
+
+    return movableDirections;
+}
+
+export function getBoundsOverlapWithWorld(
+    world: Platform, cuboidBounds: CuboidBounds
+): Vector {
+    const overlap: Vector = new Vector();
+    if (cuboidBounds.minX < world.x) {
+        overlap.x = world.x - cuboidBounds.minX;
+    } 
+    if (cuboidBounds.maxX > world.maxX) {
+        overlap.x = world.maxX - cuboidBounds.maxX;
+    }
+    if (cuboidBounds.minZ < world.z) {
         overlap.z = world.z - cuboidBounds.minZ;
     } 
     if (cuboidBounds.maxZ > world.maxZ) {
-        movableDirections.left = false;
         overlap.z = world.maxZ - cuboidBounds.maxZ;
     }
     if (cuboidBounds.minY < world.y) {
-        movableDirections.down = false;
         overlap.y = world.y - cuboidBounds.minY;
     } 
 
-    return [overlap, movableDirections];
+    return overlap;
 }
 
 export class Collider {
@@ -115,28 +167,25 @@ export class Collider {
     public getCollisionWithWorld(
         world: Platform, object3dList: Object3D[]
     ): CollisionItem[] {
-        let result: CollisionItem[] = object3dList.map(object3d => {
-            let nextPosition: Vector = object3d.getNextPosition();
-            let nextPositionCuboidBounds: CuboidBounds =
+        const result: CollisionItem[] = object3dList.map(object3d => {
+            const nextPosition: Vector = object3d.getNextPosition();
+            const nextPositionCuboidBounds: CuboidBounds =
                 object3d.getCuboidBounds(
                     nextPosition.x, nextPosition.y, nextPosition.z
                 );
-            let [overlapWithWorld, movableDirections]: [Vector, MovableDirections] = 
-                getBoundsOverlapWithWorld(
-                    world, nextPositionCuboidBounds
-                );
-            let item: CollisionItem = {
-                object3d: object3d,
-                overlap: overlapWithWorld,
-                currentPosition: object3d.getCurrentPosition(),
-                nextPosition: nextPosition,
-                movableDirections: movableDirections,
-            };
+            const overlapWithWorld: Vector = 
+                getBoundsOverlapWithWorld(world, nextPositionCuboidBounds);
+            const item: CollisionItem = new CollisionItem(
+                object3d,
+                object3d.getCurrentPosition(),
+                nextPosition,
+                getMovableDirectionsWithWorld(world, nextPositionCuboidBounds),
+            );
             item.nextPosition.x += overlapWithWorld.x;
             item.nextPosition.y += overlapWithWorld.y;
             item.nextPosition.z += overlapWithWorld.z;
 
-            let isOutOfBound: boolean = (
+            const isOutOfBound: boolean = (
                 overlapWithWorld.x !== 0 
                 || overlapWithWorld.y !== 0 
                 || overlapWithWorld.z !== 0
@@ -150,86 +199,90 @@ export class Collider {
         return result;
     }
 
-    private getPositionsAndBounds(
-        object3d: Object3D, immovableItemsMap: CollisionItemUuidMapping
-    ): [Vector, Vector, CuboidBounds] {
-        if (immovableItemsMap[object3d.uuid]) {
-            return [
-                immovableItemsMap[object3d.uuid].currentPosition,
-                immovableItemsMap[object3d.uuid].nextPosition,
-                object3d.getCuboidBounds(
-                    immovableItemsMap[object3d.uuid].nextPosition.x,
-                    immovableItemsMap[object3d.uuid].nextPosition.y,
-                    immovableItemsMap[object3d.uuid].nextPosition.z
-                ),
-            ]
-        }
-        let nextPosition: Vector = object3d.getNextPosition();
-        return [
-            object3d.getCurrentPosition(),
-            nextPosition,
-            object3d.getCuboidBounds(
-                nextPosition.x, nextPosition.y, nextPosition.z
-            )
-        ];
-
-    }
-
     public getCollisionMapping(
         world: Platform, object3dList: Object3D[]
     ): CollisionItem[] {
-        let result: CollisionMapping = {};
+        let collisionMapping: CollisionMapping = {};
         if (object3dList.length < 2) {
             return [];
         }
-        let immovableItemsMap: CollisionItemUuidMapping = {};
+        let itemUuidMap: CollisionItemUuidMapping = {};
         this.getCollisionWithWorld(world, object3dList).forEach(item => {
-            immovableItemsMap[item.object3d.uuid] = item;
+            itemUuidMap[item.object3d.uuid] = item;
         });
 
         object3dList.forEach(a => {
-            let [
-                currentPositionA, nextPositionA, cuboidBoundsA,
-            ] = this.getPositionsAndBounds(a, immovableItemsMap);
-
             object3dList.filter(item => item.uuid !== a.uuid).forEach(b => {
-                let collisionKeyA: string = a.uuid + b.uuid;
-                let collisionKeyB: string = b.uuid + a.uuid;
-                if (collisionKeyA in result || collisionKeyB in result) {
+                const collisionKeyA: string = a.uuid + b.uuid;
+                const collisionKeyB: string = b.uuid + a.uuid;
+                if (collisionKeyA in collisionMapping || collisionKeyB in collisionMapping) {
                     return;
                 }
-                let [
-                    currentPositionB, nextPositionB, cuboidBoundsB,
-                ] = this.getPositionsAndBounds(b, immovableItemsMap);
+                const collisionItemA: CollisionItem = itemUuidMap[a.uuid];
+                const collisionItemB: CollisionItem = itemUuidMap[b.uuid];
+                const cuboidBoundsA: CuboidBounds = 
+                    collisionItemA.getNextPositionCuboidBounds();
+                const cuboidBoundsB: CuboidBounds = 
+                    collisionItemB.getNextPositionCuboidBounds();
+                const doesOverlapFlag: boolean = isOverlapping(cuboidBoundsA, cuboidBoundsB);
+                const overlapA: Vector | null = doesOverlapFlag ? getBoundsOverlap(
+                    collisionItemA.currentPosition, cuboidBoundsA, 
+                    collisionItemB.currentPosition, cuboidBoundsB
+                ) : null;
+                const overlapB: Vector | null = doesOverlapFlag ? getBoundsOverlap(
+                    collisionItemB.currentPosition, cuboidBoundsB, 
+                    collisionItemA.currentPosition, cuboidBoundsA
+                ) : null;
+                if (overlapA !== null) {
+                    collisionItemA.nextPosition = getPositionAfterCollision(
+                        collisionItemA.currentPosition,
+                        collisionItemA.nextPosition,
+                        overlapA
+                    );
+                    if (
+                        !collisionItemB.movableDirections.up
+                        || !collisionItemB.movableDirections.up
+                    ) {
+                        collisionItemB.object3d.velocity.y = 0;
+                    }
+                }
+                if (overlapB !== null) {
+                    collisionItemB.nextPosition = getPositionAfterCollision(
+                        collisionItemB.currentPosition,
+                        collisionItemB.nextPosition,
+                        overlapB
+                    );
+                    if (
+                        !collisionItemA.movableDirections.up
+                        || !collisionItemA.movableDirections.down
+                    ) {
+                        collisionItemB.object3d.velocity.y = 0;
+                    }
+                }
+                collisionMapping[collisionKeyA] = collisionItemA;
+                collisionMapping[collisionKeyB] = collisionItemB;
 
-                let doesOverlapFlag: boolean = isOverlapping(cuboidBoundsA, cuboidBoundsB);
-                let overlapA: Vector | null = doesOverlapFlag ? getBoundsOverlap(
-                    cuboidBoundsA, cuboidBoundsB
-                ) : null;
-                result[collisionKeyA] = {
-                    object3d: a,
-                    overlap: overlapA,
-                    currentPosition: currentPositionA,
-                    nextPosition: overlapA ? getPositionAfterCollision(
-                        currentPositionA, nextPositionA, overlapA
-                    ) : nextPositionA,
-                    movableDirections: new MovableDirections(),
-                };
-                let overlapB: Vector | null = doesOverlapFlag ? getBoundsOverlap(
-                    cuboidBoundsB, cuboidBoundsA
-                ) : null;
-                result[collisionKeyB] = {
-                    object3d: b,
-                    overlap: overlapB,
-                    currentPosition: currentPositionB,
-                    nextPosition: overlapB ? getPositionAfterCollision(
-                        currentPositionB, nextPositionB, overlapB
-                    ) : nextPositionB,
-                    movableDirections: new MovableDirections(),
-                };
+                // result[collisionKeyA] = {
+                //     object3d: a,
+                //     overlap: overlapA,
+                //     currentPosition: currentPositionA,
+                //     nextPosition: overlapA ? getPositionAfterCollision(
+                //         currentPositionA, nextPositionA, overlapA
+                //     ) : nextPositionA,
+                //     movableDirections: new MovableDirections(),
+                // };
+                // result[collisionKeyB] = {
+                //     object3d: b,
+                //     overlap: overlapB,
+                //     currentPosition: currentPositionB,
+                //     nextPosition: overlapB ? getPositionAfterCollision(
+                //         currentPositionB, nextPositionB, overlapB
+                //     ) : nextPositionB,
+                //     movableDirections: new MovableDirections(),
+                // };
             });
         });
-        return Object.values(result);
+        return Object.values(itemUuidMap);
     }
 
 }
