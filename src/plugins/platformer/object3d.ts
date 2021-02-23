@@ -256,11 +256,6 @@ export class Object3D {
         return result;
     }
 
-    public getNextPositionCuboidBounds(): CuboidBounds {
-        const nextPosition: Vector = this.getNextPosition();
-        return this.getCuboidBounds(nextPosition.x, nextPosition.y, nextPosition.z);
-    }
-
     public drawCollisionBox() {
         const projection: Projection = getProjection(this.x, this.y, this.z);
         if (!this.graphics) {
