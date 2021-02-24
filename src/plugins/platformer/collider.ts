@@ -91,6 +91,50 @@ function getBoundsOverlap(
     return result;
 }
 
+function getOverlap(
+    aMin: number, aMax: number, bMin: number, bMax: number
+): number {
+    if (aMin <= bMin && bMin <= aMax && aMax <= bMax) {
+        //   |-------------|
+        // aMin          aMax
+        //            |-------------|
+        //          bMin          bMax
+        return aMax - bMin;
+
+    } else if (bMin <= aMin && aMax <= bMax) {
+        //     |-------------|
+        //   aMin          aMax
+        //   |-----------------|
+        // bMin              bMax
+        return aMax - aMin;
+
+    } else if (bMin <= aMin && aMin <= bMax && bMax <= aMax) {
+        //               |-------------|
+        //             aMin          aMax
+        //    |-------------|
+        //  bMin          bMax
+        return bMax - aMin;
+    } 
+
+    return 0;
+}
+
+class Overlap {
+    public x: number;
+    public y: number;
+    public z: number;
+
+    constructor(a: CuboidBounds, b: CuboidBounds) {
+        this.x = getOverlap(a.minX, a.maxX, b.minX, b.maxX);
+        this.y = getOverlap(a.minY, a.maxY, b.minY, b.maxY);
+        this.z = getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ);
+    }
+
+    get isOverlapping(): boolean {
+        return this.x !== 0 && this.y !== 0 && this.z !==0;
+    }
+}
+
 function getPositionAfterCollision(
     currentPosition: Vector, nextPosition: Vector, overlap: Vector
 ): Vector {
@@ -233,6 +277,7 @@ export class Collider {
                     collisionItemB.currentPosition, cuboidBoundsB, 
                     collisionItemA.currentPosition, cuboidBoundsA
                 ) : null;
+                const overlap: Overlap = new Overlap(cuboidBoundsA, cuboidBoundsB);
                 if (overlapA !== null) {
                     collisionItemA.nextPosition = getPositionAfterCollision(
                         collisionItemA.currentPosition,
