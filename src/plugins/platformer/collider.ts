@@ -136,22 +136,34 @@ class Overlap {
 }
 
 function getPositionAfterCollision(
-    currentPosition: Vector, nextPosition: Vector, overlap: Vector
+    currentPosition: Vector, nextPosition: Vector, overlap: Overlap 
 ): Vector {
     const diff: Vector = nextPosition.getDifference(
         currentPosition.x, currentPosition.y, currentPosition.z
     );
     const result: Vector = nextPosition.copy();
-    if (diff.y !== 0) {
-        result.y += overlap.y;
+    if (diff.y > 0) {
+        // going UP
+        result.y -= (overlap.y + 1);
+    } else if (diff.y < 0) {
+        // going DOWN
+        result.y += (overlap.y + 1);
     }
 
-    if (diff.z !== 0) {
-        result.z -= overlap.z;
+    if (diff.z > 0) {
+        // going LEFT
+        result.z -= (overlap.z + 1);
+    } else if (diff.z < 0) {
+        // going RIGHT
+        result.z += (overlap.z + 1);
     }
 
-    if (diff.x !== 0) {
-        result.x -= overlap.x;
+    if (diff.x > 0) {
+        // going FORWARD
+        result.x -= (overlap.x + 1);
+    } else if (diff.x < 0) {
+        // going BACKWARD
+        result.x += (overlap.x + 1);
     }
 
 
@@ -268,41 +280,32 @@ export class Collider {
                     collisionItemA.getNextPositionCuboidBounds();
                 const cuboidBoundsB: CuboidBounds = 
                     collisionItemB.getNextPositionCuboidBounds();
-                const doesOverlapFlag: boolean = isOverlapping(cuboidBoundsA, cuboidBoundsB);
-                const overlapA: Vector | null = doesOverlapFlag ? getBoundsOverlap(
-                    collisionItemA.currentPosition, cuboidBoundsA, 
-                    collisionItemB.currentPosition, cuboidBoundsB
-                ) : null;
-                const overlapB: Vector | null = doesOverlapFlag ? getBoundsOverlap(
-                    collisionItemB.currentPosition, cuboidBoundsB, 
-                    collisionItemA.currentPosition, cuboidBoundsA
-                ) : null;
-                const overlap: Overlap = new Overlap(cuboidBoundsA, cuboidBoundsB);
-                if (overlapA !== null) {
-                    collisionItemA.nextPosition = getPositionAfterCollision(
-                        collisionItemA.currentPosition,
-                        collisionItemA.nextPosition,
-                        overlapA
-                    );
-                    if (
-                        !collisionItemB.movableDirections.up
-                        || !collisionItemB.movableDirections.up
-                    ) {
-                        collisionItemB.object3d.velocity.y = 0;
-                    }
+                const overlap: Overlap = 
+                    new Overlap(cuboidBoundsA, cuboidBoundsB);
+                if (!overlap.isOverlapping) {
+                    return;
                 }
-                if (overlapB !== null) {
-                    collisionItemB.nextPosition = getPositionAfterCollision(
-                        collisionItemB.currentPosition,
-                        collisionItemB.nextPosition,
-                        overlapB
-                    );
-                    if (
-                        !collisionItemA.movableDirections.up
-                        || !collisionItemA.movableDirections.down
-                    ) {
-                        collisionItemB.object3d.velocity.y = 0;
-                    }
+                collisionItemA.nextPosition = getPositionAfterCollision(
+                    collisionItemA.currentPosition,
+                    collisionItemA.nextPosition,
+                    overlap
+                );
+                if (
+                    !collisionItemB.movableDirections.up
+                    || !collisionItemB.movableDirections.up
+                ) {
+                    collisionItemB.object3d.velocity.y = 0;
+                }
+                collisionItemB.nextPosition = getPositionAfterCollision(
+                    collisionItemB.currentPosition,
+                    collisionItemB.nextPosition,
+                    overlap
+                );
+                if (
+                    !collisionItemA.movableDirections.up
+                    || !collisionItemA.movableDirections.down
+                ) {
+                    collisionItemB.object3d.velocity.y = 0;
                 }
                 collisionMapping[collisionKeyA] = collisionItemA;
                 collisionMapping[collisionKeyB] = collisionItemB;
