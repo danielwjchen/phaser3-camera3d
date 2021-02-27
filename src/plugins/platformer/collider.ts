@@ -34,63 +34,6 @@ export type CollisionItemUuidMapping = {
 
 export type CollisionMapping = {[key: string]: CollisionItem};
 
-function isOverlapping(a: CuboidBounds, b: CuboidBounds): boolean {
-    return (a.minX <= b.maxX && a.maxX >= b.minX)
-        && (a.minY <= b.maxY && a.maxY >= b.minY)
-        && (a.minZ <= b.maxZ && a.maxZ >= b.minZ);
-}
-
-function getBoundsOverlap(
-    currentPositionA: Vector, cuboidBoundsA: CuboidBounds, 
-    currentPositionB: Vector, cuboidBoundsB: CuboidBounds
-): Vector {
-    const result: Vector = new Vector();
-    if (currentPositionA.x > currentPositionB.x) {
-        if (cuboidBoundsA.minX < cuboidBoundsB.maxX) {
-            result.x = cuboidBoundsB.maxX - cuboidBoundsA.minX + 1;
-        }
-    } else if (currentPositionA.x < currentPositionB.x) {
-        if (cuboidBoundsA.maxX >= cuboidBoundsB.minX) {
-            result.x = cuboidBoundsA.maxX - cuboidBoundsB.minX - 1;
-        }
-    }
-    if (currentPositionA.y > currentPositionB.y) {
-        if (cuboidBoundsA.minY < cuboidBoundsB.maxY) {
-            result.y = cuboidBoundsB.maxY - cuboidBoundsA.minY + 1;
-        }
-    } else if (currentPositionA.y < currentPositionB.y) {
-        if (cuboidBoundsA.maxY >= cuboidBoundsB.minY) {
-            result.y = cuboidBoundsA.maxY - cuboidBoundsB.minY - 1;
-        }
-    }
-    if (currentPositionA.z > currentPositionB.z) {
-        if (cuboidBoundsA.minZ < cuboidBoundsB.maxZ) {
-            result.z = cuboidBoundsB.maxZ - cuboidBoundsA.minZ + 1;
-        }
-    } else if (currentPositionA.z < currentPositionB.z) {
-        if (cuboidBoundsA.maxZ >= cuboidBoundsB.minZ) {
-            result.z = cuboidBoundsA.maxZ - cuboidBoundsB.minZ - 1;
-        }
-    }
-    // if (cuboidBoundsA.minX <= cuboidBoundsB.maxX && cuboidBoundsA.maxX > cuboidBoundsB.maxX) {
-    //     result.x = cuboidBoundsA.minX - (cuboidBoundsB.maxX + 1);
-    // } else if (cuboidBoundsA.maxX >= cuboidBoundsB.minX) {
-    //     result.x = cuboidBoundsA.maxX - (cuboidBoundsB.minX - 1);
-    // } 
-    // if (cuboidBoundsA.minZ <= cuboidBoundsB.maxZ && cuboidBoundsA.maxZ > cuboidBoundsB.maxZ) {
-    //     result.z = cuboidBoundsA.minZ - (cuboidBoundsB.maxZ + 1);
-    // } else if (cuboidBoundsA.maxZ >= cuboidBoundsB.minZ) {
-    //     result.z = cuboidBoundsA.maxZ - (cuboidBoundsB.minZ - 1);
-    // } 
-    // if (cuboidBoundsA.minY <= cuboidBoundsB.maxY && cuboidBoundsA.maxY > cuboidBoundsB.maxY) {
-    //     result.y = (cuboidBoundsA.minY - (cuboidBoundsB.maxY + 1)) * -1;
-    // } else if (cuboidBoundsA.maxY >= cuboidBoundsB.minY) {
-    //     result.y = cuboidBoundsA.maxY - (cuboidBoundsB.minY - 1);
-    // } 
-
-    return result;
-}
-
 function getOverlap(
     aMin: number, aMax: number, bMin: number, bMax: number
 ): number {
