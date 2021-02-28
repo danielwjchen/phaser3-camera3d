@@ -130,6 +130,33 @@ class Overlap {
     }
 }
 
+function getIsCollidingX(a: CuboidBounds, b: CuboidBounds): boolean {
+    return (
+        a.minX >= b.maxX  || a.maxX <= b.minX
+        && 0 !== getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ)
+        && 0 !== getOverlap(a.minY, a.maxY, b.minY, b.maxY)
+    );
+    // return 0 === getOverlap(a.minX, a.maxX, b.minX, b.maxX);
+}
+
+function getIsCollidingY(a: CuboidBounds, b: CuboidBounds): boolean {
+    return (
+        a.minY >= b.maxY || a.maxY <= b.minY
+        && 0 !== getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ)
+        && 0 !== getOverlap(a.minX, a.maxX, b.minX, b.maxX)
+    );
+    // return 0 === getOverlap(a.minY, a.maxY, b.minY, b.maxY);
+}
+
+function getIsCollidingZ(a: CuboidBounds, b: CuboidBounds): boolean {
+    return (
+        a.minZ >= b.maxZ || a.maxZ <= b.minZ
+        && 0 !== getOverlap(a.minX, a.maxX, b.minX, b.maxX)
+        && 0 !== getOverlap(a.minY, a.maxY, b.minY, b.maxY)
+    );
+    // return 0 === getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ);
+}
+
 export function getMovableDirectionsWithWorld(
     world: Platform, cuboidBounds: CuboidBounds
 ): MovableDirections {
@@ -249,23 +276,14 @@ export class Collider {
                     collisionItemA.getCurrentPositionCuboidBounds();
                 const cuboidBoundsBCurrentPosition: CuboidBounds = 
                     collisionItemB.getCurrentPositionCuboidBounds();
-                const isCollidingX: boolean = 0 === getOverlap(
-                    cuboidBoundsACurrentPosition.minX,
-                    cuboidBoundsACurrentPosition.maxX,
-                    cuboidBoundsBCurrentPosition.minX,
-                    cuboidBoundsBCurrentPosition.maxX
+                const isCollidingX: boolean = getIsCollidingX(
+                    cuboidBoundsACurrentPosition, cuboidBoundsBCurrentPosition
                 );
-                const isCollidingY: boolean = 0 === getOverlap(
-                    cuboidBoundsACurrentPosition.minY,
-                    cuboidBoundsACurrentPosition.maxY,
-                    cuboidBoundsBCurrentPosition.minY,
-                    cuboidBoundsBCurrentPosition.maxY
+                const isCollidingY: boolean = getIsCollidingY(
+                    cuboidBoundsACurrentPosition, cuboidBoundsBCurrentPosition
                 );
-                const isCollidingZ: boolean = 0 === getOverlap(
-                    cuboidBoundsACurrentPosition.minZ,
-                    cuboidBoundsACurrentPosition.maxZ,
-                    cuboidBoundsBCurrentPosition.minZ,
-                    cuboidBoundsBCurrentPosition.maxZ
+                const isCollidingZ: boolean = getIsCollidingZ(
+                    cuboidBoundsACurrentPosition, cuboidBoundsBCurrentPosition
                 );
                 collisionItemA.setNextPositionAfterCollision(
                     overlap, isCollidingX, isCollidingY, isCollidingZ
