@@ -4,6 +4,17 @@ import { v4 as uuidv4 } from 'uuid';
 
 const COLOR_GRID: number = 0x00aa00;
 
+export class MovableDirections {
+    constructor(
+        public up: boolean = true,
+        public down: boolean = true,
+        public left: boolean = true,
+        public right: boolean = true,
+        public forward: boolean = true,
+        public backward: boolean = true,
+    ) {}
+};
+
 export type Projection = {
     x: number,
     y: number,
@@ -341,11 +352,13 @@ export class Object3D {
         return result;
     }
 
-    public update(x: number, y: number, z: number) {
+    public update(
+        x: number, y: number, z: number, movableDirections: MovableDirections
+    ) {
         this.x = x;
         this.y = y;
         this.z = z;
-        if ((this.y - this.sprite.height / 2) > 0) {
+        if (movableDirections.down && (this.y - this.sprite.height / 2) > 0) {
             this.velocity.y -= GRAVITY;
         } else {
             this.velocity.y = 0;

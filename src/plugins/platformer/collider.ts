@@ -1,16 +1,5 @@
-import { CuboidBounds, Object3D, Vector } from "./object3d";
+import { CuboidBounds, Object3D, Vector, MovableDirections } from "./object3d";
 import { Platform } from "./platform";
-
-export class MovableDirections {
-    constructor(
-        public up: boolean = true,
-        public down: boolean = true,
-        public left: boolean = true,
-        public right: boolean = true,
-        public forward: boolean = true,
-        public backward: boolean = true,
-    ) {}
-};
 
 export class CollisionItem {
 
@@ -136,7 +125,6 @@ function getIsCollidingX(a: CuboidBounds, b: CuboidBounds): boolean {
         && 0 !== getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ)
         && 0 !== getOverlap(a.minY, a.maxY, b.minY, b.maxY)
     );
-    // return 0 === getOverlap(a.minX, a.maxX, b.minX, b.maxX);
 }
 
 function getIsCollidingY(a: CuboidBounds, b: CuboidBounds): boolean {
@@ -145,7 +133,6 @@ function getIsCollidingY(a: CuboidBounds, b: CuboidBounds): boolean {
         && 0 !== getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ)
         && 0 !== getOverlap(a.minX, a.maxX, b.minX, b.maxX)
     );
-    // return 0 === getOverlap(a.minY, a.maxY, b.minY, b.maxY);
 }
 
 function getIsCollidingZ(a: CuboidBounds, b: CuboidBounds): boolean {
@@ -154,7 +141,6 @@ function getIsCollidingZ(a: CuboidBounds, b: CuboidBounds): boolean {
         && 0 !== getOverlap(a.minX, a.maxX, b.minX, b.maxX)
         && 0 !== getOverlap(a.minY, a.maxY, b.minY, b.maxY)
     );
-    // return 0 === getOverlap(a.minZ, a.maxZ, b.minZ, b.maxZ);
 }
 
 export function getMovableDirectionsWithWorld(
@@ -258,7 +244,10 @@ export class Collider {
             object3dList.filter(item => item.uuid !== a.uuid).forEach(b => {
                 const collisionKeyA: string = a.uuid + b.uuid;
                 const collisionKeyB: string = b.uuid + a.uuid;
-                if (collisionKeyA in collisionMapping || collisionKeyB in collisionMapping) {
+                if (
+                    collisionKeyA in collisionMapping 
+                    || collisionKeyB in collisionMapping
+                ) {
                     return;
                 }
                 const collisionItemA: CollisionItem = itemUuidMap[a.uuid];
@@ -267,8 +256,9 @@ export class Collider {
                     collisionItemA.getNextPositionCuboidBounds();
                 const cuboidBoundsBNextPosition: CuboidBounds = 
                     collisionItemB.getNextPositionCuboidBounds();
-                const overlap: Overlap = 
-                    new Overlap(cuboidBoundsANextPosition, cuboidBoundsBNextPosition);
+                const overlap: Overlap = new Overlap(
+                    cuboidBoundsANextPosition, cuboidBoundsBNextPosition
+                );
                 if (!overlap.isOverlapping) {
                     return;
                 }
