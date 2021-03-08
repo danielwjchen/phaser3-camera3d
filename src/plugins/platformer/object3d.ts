@@ -358,7 +358,7 @@ export class Object3D {
         this.x = x;
         this.y = y;
         this.z = z;
-        if (movableDirections.down && (this.y - this.sprite.height / 2) > 0) {
+        if (movableDirections.down) {
             this.velocity.y -= GRAVITY;
         } else {
             this.velocity.y = 0;
