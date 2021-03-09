@@ -34,8 +34,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
                     item.object3d.update(
                         item.nextPosition.x,
                         item.nextPosition.y,
-                        item.nextPosition.z,
-                        item.movableDirections
+                        item.nextPosition.z
                     );
                 });
                 this.object3ds.forEach(object3d => {

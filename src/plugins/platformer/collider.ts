@@ -2,13 +2,19 @@ import { CuboidBounds, Object3D, Vector, MovableDirections } from "./object3d";
 import { Platform } from "./platform";
 
 export class CollisionItem {
+    public currentPosition: Vector;
+    public nextPosition: Vector;
+    public diffPosition: Vector;
 
     constructor(
         public object3d: Object3D,
-        public currentPosition: Vector,
-        public nextPosition: Vector,
-        public movableDirections: MovableDirections,
-    ) {}
+    ) {
+        this.currentPosition = this.object3d.getCurrentPosition();
+        this.nextPosition = this.object3d.getNextPosition();
+        this.diffPosition = this.nextPosition.getDifference(
+            this.currentPosition.x, this.currentPosition.y, this.currentPosition.z
+        );
+    }
 
     public getNextPositionCuboidBounds(): CuboidBounds {
         return this.object3d.getCuboidBounds(
@@ -23,49 +29,70 @@ export class CollisionItem {
     }
 
     public setNextPositionAfterCollision(
-        overlap: Overlap,
+        overlap: Overlap, movableDirections: MovableDirections,
         isCollidingX: boolean, isCollidingY: boolean, isCollidingZ: boolean
     ): Vector {
-        const diff: Vector = this.nextPosition.getDifference(
-            this.currentPosition.x, this.currentPosition.y, this.currentPosition.z
-        );
-        if (diff.x === 0 && diff.y === 0 && diff.z === 0) {
+        if (
+            this.diffPosition.x === 0 
+            && this.diffPosition.y === 0 
+            && this.diffPosition.z === 0
+        ) {
             return this.nextPosition;
         }
         if (isCollidingY) {
-            if (diff.y > 0) {
+            if (this.diffPosition.y > 0) {
                 // going UP
                 this.nextPosition.y -= (overlap.y + 1);
-            } else if (diff.y < 0) {
+                this.object3d.movableDirections.up = movableDirections.up;
+            } else if (this.diffPosition.y < 0) {
                 // going DOWN
                 this.nextPosition.y += (overlap.y + 1);
+                this.object3d.movableDirections.down = movableDirections.down;
             }
             return this.nextPosition;
         }
 
         if (isCollidingZ) {
-            if (diff.z > 0) {
+            if (this.diffPosition.z > 0) {
                 // going LEFT
                 this.nextPosition.z -= (overlap.z + 1);
-            } else if (diff.z < 0) {
+                this.object3d.movableDirections.left = movableDirections.left;
+            } else if (this.diffPosition.z < 0) {
                 // going RIGHT
                 this.nextPosition.z += (overlap.z + 1);
+                this.object3d.movableDirections.right = movableDirections.right;
             }
             return this.nextPosition;
         }
 
         if (isCollidingX) {
-            if (diff.x > 0) {
+            if (this.diffPosition.x > 0) {
                 // going FORWARD
                 this.nextPosition.x -= (overlap.x + 1);
-            } else if (diff.x < 0) {
+                this.object3d.movableDirections.forward = movableDirections.forward;
+            } else if (this.diffPosition.x < 0) {
                 // going BACKWARD
                 this.nextPosition.x += (overlap.x + 1);
+                this.object3d.movableDirections.backward = movableDirections.backward;
             }
             return this.nextPosition;
         }
 
         return this.nextPosition;
+    }
+
+    public setMovableDirectionsWithWorld(
+        world: Platform, cuboidBounds: CuboidBounds
+    ): void {
+        this.object3d.movableDirections.backward = cuboidBounds.minX > world.x;
+        this.object3d.movableDirections.forward = cuboidBounds.maxX < world.maxX;
+        this.object3d.movableDirections.right = cuboidBounds.minZ > world.z;
+        this.object3d.movableDirections.left = cuboidBounds.maxZ < world.maxZ;
+        if (this.diffPosition.y < 0) {
+            this.object3d.movableDirections.down = cuboidBounds.minY > world.y;
+        }
+        // there is no ceiling, yet
+        this.object3d.movableDirections.up = true;
     }
 }
 
@@ -155,29 +182,6 @@ function getIsCollidingZ(a: CuboidBounds, b: CuboidBounds): boolean {
     );
 }
 
-export function getMovableDirectionsWithWorld(
-    world: Platform, cuboidBounds: CuboidBounds
-): MovableDirections {
-    const movableDirections: MovableDirections = new MovableDirections();
-    if (cuboidBounds.minX <= world.x) {
-        movableDirections.backward = false;
-    }
-    if (cuboidBounds.maxX >= world.maxX) {
-        movableDirections.forward = false;
-    }
-    if (cuboidBounds.minZ < world.z) {
-        movableDirections.right = false;
-    }
-    if (cuboidBounds.maxZ >= world.maxZ) {
-        movableDirections.left = false;
-    }
-    if (cuboidBounds.minY <= world.y) {
-        movableDirections.down = false;
-    }
-
-    return movableDirections;
-}
-
 export function getBoundsOverlapWithWorld(
     world: Platform, cuboidBounds: CuboidBounds
 ): Vector {
@@ -209,19 +213,12 @@ export class Collider {
         world: Platform, object3dList: Object3D[]
     ): CollisionItem[] {
         const result: CollisionItem[] = object3dList.map(object3d => {
-            const nextPosition: Vector = object3d.getNextPosition();
+            const item: CollisionItem = new CollisionItem(object3d);
             const nextPositionCuboidBounds: CuboidBounds =
-                object3d.getCuboidBounds(
-                    nextPosition.x, nextPosition.y, nextPosition.z
-                );
+                item.getNextPositionCuboidBounds();
             const overlapWithWorld: Vector = 
                 getBoundsOverlapWithWorld(world, nextPositionCuboidBounds);
-            const item: CollisionItem = new CollisionItem(
-                object3d,
-                object3d.getCurrentPosition(),
-                nextPosition,
-                getMovableDirectionsWithWorld(world, nextPositionCuboidBounds),
-            );
+            item.setMovableDirectionsWithWorld(world, nextPositionCuboidBounds);
             item.nextPosition.x += overlapWithWorld.x;
             item.nextPosition.y += overlapWithWorld.y;
             item.nextPosition.z += overlapWithWorld.z;
@@ -288,44 +285,15 @@ export class Collider {
                     cuboidBoundsACurrentPosition, cuboidBoundsBCurrentPosition
                 );
                 collisionItemA.setNextPositionAfterCollision(
-                    overlap, isCollidingX, isCollidingY, isCollidingZ
+                    overlap, collisionItemB.object3d.movableDirections, 
+                    isCollidingX, isCollidingY, isCollidingZ
                 );
-                if (
-                    !collisionItemB.movableDirections.up
-                    || !collisionItemB.movableDirections.up
-                ) {
-                    collisionItemB.object3d.velocity.y = 0;
-                }
                 collisionItemB.setNextPositionAfterCollision(
-                    overlap, isCollidingX, isCollidingY, isCollidingZ
+                    overlap, collisionItemA.object3d.movableDirections, 
+                    isCollidingX, isCollidingY, isCollidingZ
                 );
-                if (
-                    !collisionItemA.movableDirections.up
-                    || !collisionItemA.movableDirections.down
-                ) {
-                    collisionItemB.object3d.velocity.y = 0;
-                }
                 collisionMapping[collisionKeyA] = collisionItemA;
                 collisionMapping[collisionKeyB] = collisionItemB;
-
-                // result[collisionKeyA] = {
-                //     object3d: a,
-                //     overlap: overlapA,
-                //     currentPosition: currentPositionA,
-                //     nextPosition: overlapA ? getPositionAfterCollision(
-                //         currentPositionA, nextPositionA, overlapA
-                //     ) : nextPositionA,
-                //     movableDirections: new MovableDirections(),
-                // };
-                // result[collisionKeyB] = {
-                //     object3d: b,
-                //     overlap: overlapB,
-                //     currentPosition: currentPositionB,
-                //     nextPosition: overlapB ? getPositionAfterCollision(
-                //         currentPositionB, nextPositionB, overlapB
-                //     ) : nextPositionB,
-                //     movableDirections: new MovableDirections(),
-                // };
             });
         });
         return Object.values(itemUuidMap);

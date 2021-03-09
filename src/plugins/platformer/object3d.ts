@@ -91,6 +91,7 @@ export class Object3D {
     public coordinatesText: Phaser.GameObjects.Text | undefined;
     public sprite: Phaser.GameObjects.Sprite;
     public collisionCallback: ((force: Vector) => void) | undefined;
+    public movableDirections: MovableDirections = new MovableDirections();
 
     private _uuid: string;
     private _x: number = 0;
@@ -353,12 +354,12 @@ export class Object3D {
     }
 
     public update(
-        x: number, y: number, z: number, movableDirections: MovableDirections
+        x: number, y: number, z: number
     ) {
         this.x = x;
         this.y = y;
         this.z = z;
-        if (movableDirections.down) {
+        if (this.movableDirections.down) {
             this.velocity.y -= GRAVITY;
         } else {
             this.velocity.y = 0;
