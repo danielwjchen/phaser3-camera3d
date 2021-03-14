@@ -36,7 +36,7 @@ export function sortObject3dListByDistance(object3dList: Object3D[], object3d: O
             return -1;
         }
         if (distanceB1 > distanceB2) {
-            return -1;
+            return 1;
         }
 
         return 0;
