@@ -30,12 +30,12 @@ export interface IVector {
 
 export function sortObject3dListByDistance(object3dList: Object3D[], object3d: Object3D) {
     object3dList.sort((a, b) => {
-        const distanceB1: number = getDistance(object3d, a);
-        const distanceB2: number = getDistance(object3d, b);
-        if (distanceB1 < distanceB2) {
+        const distanceFromA: number = getDistance(object3d, a);
+        const distanceFromB: number = getDistance(object3d, b);
+        if (distanceFromA < distanceFromB) {
             return -1;
         }
-        if (distanceB1 > distanceB2) {
+        if (distanceFromA > distanceFromB) {
             return 1;
         }
 
