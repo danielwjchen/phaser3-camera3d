@@ -88,9 +88,7 @@ export class CollisionItem {
         this.object3d.movableDirections.forward = cuboidBounds.maxX < world.maxX;
         this.object3d.movableDirections.right = cuboidBounds.minZ > world.z;
         this.object3d.movableDirections.left = cuboidBounds.maxZ < world.maxZ;
-        if (this.diffPosition.y < 0) {
-            this.object3d.movableDirections.down = cuboidBounds.minY > world.y;
-        }
+        this.object3d.movableDirections.down = cuboidBounds.minY > world.y;
         // there is no ceiling, yet
         this.object3d.movableDirections.up = true;
     }
@@ -241,9 +239,6 @@ export class Collider {
         world: Platform, object3dList: Object3D[]
     ): CollisionItem[] {
         let collisionMapping: CollisionMapping = {};
-        if (object3dList.length < 2) {
-            return [];
-        }
         let itemUuidMap: CollisionItemUuidMapping = {};
         this.getCollisionWithWorld(world, object3dList).forEach(item => {
             itemUuidMap[item.object3d.uuid] = item;
