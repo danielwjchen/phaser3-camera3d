@@ -97,6 +97,7 @@ export class Object3D {
     private _x: number = 0;
     private _y: number = 0;
     private _z: number = 0;
+    private _velocityMax: Vector;
     private graphics: Phaser.GameObjects.Graphics | undefined;
     private polygons: Phaser.Geom.Polygon[] = [];
     private halfLength: number = 0;
@@ -132,6 +133,10 @@ export class Object3D {
         return this._z;
     }
 
+    get velocityMax(): Vector {
+        return this._velocityMax;
+    }
+
     constructor(
         platform: Platform,
         x: number, y: number, z: number, 
@@ -142,6 +147,10 @@ export class Object3D {
         this.sprite = sprite;
         this.setSpriteDimensions();
         this.velocity = new Vector();
+        this._velocityMax = new Vector();
+        this._velocityMax.x = this.sprite.width;
+        this._velocityMax.y = this.sprite.width;
+        this._velocityMax.z = this.sprite.height;
         this.x = x;
         this.y = y;
         this.z = z;
@@ -353,6 +362,13 @@ export class Object3D {
         return result;
     }
 
+    private getVelocityWithinMax(velocity: number, velocityMax: number): number {
+        if (Math.abs(velocity) > velocityMax) {
+            return velocity > 0 ? velocityMax : velocityMax * -1;
+        } 
+        return velocity;
+    }
+
     public update(
         x: number, y: number, z: number
     ) {
@@ -364,6 +380,9 @@ export class Object3D {
         } else {
             this.velocity.y = 0;
         }
+        this.velocity.x = this.getVelocityWithinMax(this.velocity.x, this.velocityMax.x);
+        this.velocity.y = this.getVelocityWithinMax(this.velocity.y, this.velocityMax.y);
+        this.velocity.z = this.getVelocityWithinMax(this.velocity.z, this.velocityMax.z);
 
         this.setSpriteDimensions();
         this.setSpritePosition();
