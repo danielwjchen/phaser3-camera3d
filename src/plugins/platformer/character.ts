@@ -68,7 +68,7 @@ export class Character {
         frame?: string | number,
         runningVelocity: number=40, 
         walkingVelocity: number=8,
-        jumpingVelocity: number=16 
+        jumpingVelocity: number=8
     ) {
         let projection: Projection = getProjection(x, y + 40, z);
         this.platform = platform;

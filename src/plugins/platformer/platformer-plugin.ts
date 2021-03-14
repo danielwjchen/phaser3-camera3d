@@ -51,7 +51,7 @@ export class PlatformerPlugin extends Phaser.Plugins.ScenePlugin {
         frame?: string | number,
         runningVelocity: number=40, 
         walkingVelocity: number=8,
-        jumpingVelocity: number=16 
+        jumpingVelocity: number=8
     ): Character {
         if (!this.platform) {
             throw new Error('Platform is not created');
