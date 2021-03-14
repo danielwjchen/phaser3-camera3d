@@ -1,4 +1,4 @@
-import { CuboidBounds, Object3D, Vector, MovableDirections } from "./object3d";
+import { CuboidBounds, Object3D, Vector, MovableDirections, getDistance, sortObject3dListByDistance } from "./object3d";
 import { Platform } from "./platform";
 
 export class CollisionItem {
@@ -245,7 +245,11 @@ export class Collider {
         });
 
         object3dList.forEach(a => {
-            object3dList.filter(item => item.uuid !== a.uuid).forEach(b => {
+            const objectsToCollide: Object3D[] =  object3dList.filter(
+                item => item.uuid !== a.uuid
+            );
+            sortObject3dListByDistance(objectsToCollide, a)
+            objectsToCollide.forEach(b => {
                 const collisionKeyA: string = a.uuid + b.uuid;
                 const collisionKeyB: string = b.uuid + a.uuid;
                 if (
