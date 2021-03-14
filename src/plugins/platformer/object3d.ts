@@ -22,7 +22,28 @@ export type Projection = {
 
 const COORDINATES_TEXT_OFFSET: number = 20;
 
-export class Vector {
+export interface IVector {
+    x: number;
+    y: number;
+    z: number;
+}
+
+export function sortObject3dListByDistance(object3dList: Object3D[], object3d: Object3D) {
+    object3dList.sort((a, b) => {
+        const distanceB1: number = getDistance(object3d, a);
+        const distanceB2: number = getDistance(object3d, b);
+        if (distanceB1 < distanceB2) {
+            return -1;
+        }
+        if (distanceB1 > distanceB2) {
+            return -1;
+        }
+
+        return 0;
+    });
+}
+
+export class Vector implements IVector {
 
     constructor(
         private _x: number = 0,
@@ -84,7 +105,11 @@ export function getProjection(x: number, y: number, z: number): Projection {
     };
 }
 
-export class Object3D {
+export function getDistance(a: IVector, b: IVector): number {
+    return Math.sqrt((b.x - a.x) ^ 2 + (b.y - a.y) ^ 2 + (b.z - a.z) ^ 2);
+}
+
+export class Object3D implements IVector {
 
     public platform: Platform;
     public velocity: Vector;
