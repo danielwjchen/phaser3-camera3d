@@ -30,7 +30,7 @@ export class CollisionItem {
     }
 
     public setNextPositionAfterCollision(
-        overlap: Overlap, movableDirections: MovableDirections,
+        overlap: Overlap,
         isCollidingX: boolean, isCollidingY: boolean, isCollidingZ: boolean
     ): Vector {
         if (
@@ -44,11 +44,11 @@ export class CollisionItem {
             if (this.diffPosition.y > 0) {
                 // going UP
                 this.nextPosition.y -= (overlap.y + 1);
-                this.object3d.movableDirections.up = movableDirections.up;
+                this.object3d.movableDirections.up = false;
             } else if (this.diffPosition.y < 0) {
                 // going DOWN
                 this.nextPosition.y += (overlap.y + 1);
-                this.object3d.movableDirections.down = movableDirections.down;
+                this.object3d.movableDirections.down = false;
             }
             return this.nextPosition;
         }
@@ -57,11 +57,11 @@ export class CollisionItem {
             if (this.diffPosition.z > 0) {
                 // going LEFT
                 this.nextPosition.z -= (overlap.z + 1);
-                this.object3d.movableDirections.left = movableDirections.left;
+                this.object3d.movableDirections.left = false;
             } else if (this.diffPosition.z < 0) {
                 // going RIGHT
                 this.nextPosition.z += (overlap.z + 1);
-                this.object3d.movableDirections.right = movableDirections.right;
+                this.object3d.movableDirections.right = false;
             }
             return this.nextPosition;
         }
@@ -70,11 +70,11 @@ export class CollisionItem {
             if (this.diffPosition.x > 0) {
                 // going FORWARD
                 this.nextPosition.x -= (overlap.x + 1);
-                this.object3d.movableDirections.forward = movableDirections.forward;
+                this.object3d.movableDirections.forward = false;
             } else if (this.diffPosition.x < 0) {
                 // going BACKWARD
                 this.nextPosition.x += (overlap.x + 1);
-                this.object3d.movableDirections.backward = movableDirections.backward;
+                this.object3d.movableDirections.backward = false;
             }
             return this.nextPosition;
         }
@@ -229,12 +229,10 @@ export class Collider {
                     cuboidBoundsACurrentPosition, cuboidBoundsBCurrentPosition
                 );
                 collisionItemA.setNextPositionAfterCollision(
-                    overlap, collisionItemB.object3d.movableDirections, 
-                    isCollidingX, isCollidingY, isCollidingZ
+                    overlap, isCollidingX, isCollidingY, isCollidingZ
                 );
                 collisionItemB.setNextPositionAfterCollision(
-                    overlap, collisionItemA.object3d.movableDirections, 
-                    isCollidingX, isCollidingY, isCollidingZ
+                    overlap, isCollidingX, isCollidingY, isCollidingZ
                 );
                 collisionMapping[collisionKeyA] = collisionItemA;
                 collisionMapping[collisionKeyB] = collisionItemB;
