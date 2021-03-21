@@ -31,7 +31,7 @@ export type STATUS_ATTACK =
     'right_punch' | 'left_punch' |  'left_kick' | 'right_kick';
 
 export type status = 'stand' | 'jump' | 'guard' | 'guard_attacked' | 'attack' |
-    STATUS_ATTACK |
+    STATUS_ATTACK | 'fly' | 
     'falling_forward' | 'falling_backward' | 'walk' | 'run' ;
 
 export const GAME_OBJECT_TYPE_CHARACTER: string = 'character';
@@ -92,7 +92,7 @@ export class Character {
         this.object3d.collisionCallback = (force: Vector) => {
             this.onCollide(force);
         };
-        this.stand();
+        this.fly();
     }
 
     /**
@@ -180,12 +180,16 @@ export class Character {
         }
     }
 
+    private isInAir() {
+        return -1 !== ['fly', 'jump'].indexOf(this.currentStatus);
+    }
+
     /**
      * Commands character to go.
      */
     public go(command: Command, isRunning: boolean = false): void {
         this.nextAttackSequence = null;
-        if (this.isKnockedOut() || this.currentStatus === 'jump') {
+        if (this.isKnockedOut() || this.isInAir()) {
             return;
         }
         if (this.currentStatus === 'guard') {
@@ -239,16 +243,22 @@ export class Character {
 
 
     public jump() {
-        if (this.isKnockedOut() || this.currentStatus === 'jump') {
+        if (this.isKnockedOut() || this.isInAir()) {
             return;
         }
         this.nextAttackSequence = null;
         this.currentStatus = 'jump';
-        this.sprite.anims.play(this.currentStatus).on('animationcomplete',  () => {
+        this.sprite.anims.play(this.currentStatus).once('animationcomplete',  () => {
             if (this.sprite.anims.getName() === 'jump') {
                 this.object3d.velocity.y = this.jumpingVelocity;
+                this.fly();
             }
         });
+    }
+
+    public fly() {
+        this.currentStatus = 'fly';
+        this.sprite.anims.play(this.currentStatus);
     }
 
     public attack() {

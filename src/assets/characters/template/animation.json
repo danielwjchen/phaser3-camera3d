@@ -1042,6 +1042,27 @@
             "hideOnComplete": false
         },
         {
+            "key": "fly",
+            "type": "frame",
+            "frames": [
+                {
+                    "key": "atlas",
+                    "frame": "jump_02",
+                    "duration": 0,
+                    "visible": true
+                }
+            ],
+            "frameRate": 16,
+            "duration": 1,
+            "skipMissedFrames": true,
+            "deplay": 0,
+            "repeatDelay": 0,
+            "repeat": 0,
+            "yoyo": false,
+            "showOnStart": false,
+            "hideOnComplete": false
+        },
+        {
             "key": "forward_jump",
             "type": "frame",
             "frames": [
